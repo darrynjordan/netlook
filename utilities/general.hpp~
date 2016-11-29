@@ -1,0 +1,18 @@
+#ifndef GENERAL_HPP
+#define GENERAL_HPP
+
+#include "../main.hpp"
+#include <iomanip> 
+#include <time.h>
+
+enum window {HANNING, HAMMING, BLACKMAN};
+
+void  initTerminal(int rangeSize, int padRangeSize);
+void  startTime(void);
+float getTime(void);
+void  printMsg(std::string msg);
+float getWindowFactor(int sample, int numSamples, int window);
+void  primeSolver(int refSize, int rangeSize);
+void  popLookUpTables(int refSize, int dopplerSize);
+
+#endif

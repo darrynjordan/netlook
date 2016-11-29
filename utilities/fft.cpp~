@@ -1,0 +1,46 @@
+#include "fft.hpp"
+#include "../main.hpp"
+
+//fftw plans
+fftw_plan rangePlan   = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRangeBuffer, fftRangeBuffer, FFTW_MEASURE);
+fftw_plan refPlan     = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuffer, FFTW_ESTIMATE);
+fftw_plan resultPlan  = fftw_plan_dft_c2r_1d(PADRANGESIZE, hilbertBuffer, realRangeBuffer, FFTW_MEASURE | FFTW_PRESERVE_INPUT);
+
+fftw_plan hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, FFTW_MEASURE);
+fftw_plan dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, dopplerBuffer, dopplerBuffer, FFTW_FORWARD, FFTW_MEASURE);
+
+void fftRefData(void)
+{
+	fftw_execute(refPlan);
+	printMsg("FFT Reference");
+}
+
+void fftRangeData(void)
+{	
+	fftw_execute(rangePlan);
+}
+
+void fftDopplerData(void)
+{
+	fftw_execute(dopplerPlan);
+}
+
+void ifftMatchedData(void)
+{
+	fftw_execute(resultPlan);
+}
+
+void hilbertTransform(void)
+{
+	memset(&hilbertBuffer[PADRANGESIZE/2 + 1], 0,  sizeof(fftw_complex)*(PADRANGESIZE/2 - 1));	
+	fftw_execute(hilbertPlan);
+}
+
+void freePlanMemory(void)
+{
+	fftw_destroy_plan(rangePlan);	
+	fftw_destroy_plan(refPlan);	
+	fftw_destroy_plan(resultPlan);	
+	fftw_destroy_plan(hilbertPlan);	
+	fftw_destroy_plan(dopplerPlan);	
+}
