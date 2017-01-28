@@ -1,0 +1,12 @@
+Dependencies:
+	sudo apt install libfftw3-dev
+	sudo apt install libopencv-dev
+	sudo apt install cmake
+
+In the 'build' folder run: 
+	cmake ..
+	make -j4
+
+To run:
+	./cpu_proc
+

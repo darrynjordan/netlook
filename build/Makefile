@@ -150,113 +150,113 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-utilities/data.o: utilities/data.cpp.o
+source/data.o: source/data.cpp.o
 
-.PHONY : utilities/data.o
-
-# target to build an object file
-utilities/data.cpp.o:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/data.cpp.o
-.PHONY : utilities/data.cpp.o
-
-utilities/data.i: utilities/data.cpp.i
-
-.PHONY : utilities/data.i
-
-# target to preprocess a source file
-utilities/data.cpp.i:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/data.cpp.i
-.PHONY : utilities/data.cpp.i
-
-utilities/data.s: utilities/data.cpp.s
-
-.PHONY : utilities/data.s
-
-# target to generate assembly for a file
-utilities/data.cpp.s:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/data.cpp.s
-.PHONY : utilities/data.cpp.s
-
-utilities/fft.o: utilities/fft.cpp.o
-
-.PHONY : utilities/fft.o
+.PHONY : source/data.o
 
 # target to build an object file
-utilities/fft.cpp.o:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o
-.PHONY : utilities/fft.cpp.o
+source/data.cpp.o:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/data.cpp.o
+.PHONY : source/data.cpp.o
 
-utilities/fft.i: utilities/fft.cpp.i
+source/data.i: source/data.cpp.i
 
-.PHONY : utilities/fft.i
+.PHONY : source/data.i
 
 # target to preprocess a source file
-utilities/fft.cpp.i:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/fft.cpp.i
-.PHONY : utilities/fft.cpp.i
+source/data.cpp.i:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/data.cpp.i
+.PHONY : source/data.cpp.i
 
-utilities/fft.s: utilities/fft.cpp.s
+source/data.s: source/data.cpp.s
 
-.PHONY : utilities/fft.s
+.PHONY : source/data.s
 
 # target to generate assembly for a file
-utilities/fft.cpp.s:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/fft.cpp.s
-.PHONY : utilities/fft.cpp.s
+source/data.cpp.s:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/data.cpp.s
+.PHONY : source/data.cpp.s
 
-utilities/general.o: utilities/general.cpp.o
+source/fft.o: source/fft.cpp.o
 
-.PHONY : utilities/general.o
+.PHONY : source/fft.o
 
 # target to build an object file
-utilities/general.cpp.o:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/general.cpp.o
-.PHONY : utilities/general.cpp.o
+source/fft.cpp.o:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/fft.cpp.o
+.PHONY : source/fft.cpp.o
 
-utilities/general.i: utilities/general.cpp.i
+source/fft.i: source/fft.cpp.i
 
-.PHONY : utilities/general.i
+.PHONY : source/fft.i
 
 # target to preprocess a source file
-utilities/general.cpp.i:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/general.cpp.i
-.PHONY : utilities/general.cpp.i
+source/fft.cpp.i:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/fft.cpp.i
+.PHONY : source/fft.cpp.i
 
-utilities/general.s: utilities/general.cpp.s
+source/fft.s: source/fft.cpp.s
 
-.PHONY : utilities/general.s
+.PHONY : source/fft.s
 
 # target to generate assembly for a file
-utilities/general.cpp.s:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/general.cpp.s
-.PHONY : utilities/general.cpp.s
+source/fft.cpp.s:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/fft.cpp.s
+.PHONY : source/fft.cpp.s
 
-utilities/plotting.o: utilities/plotting.cpp.o
+source/general.o: source/general.cpp.o
 
-.PHONY : utilities/plotting.o
+.PHONY : source/general.o
 
 # target to build an object file
-utilities/plotting.cpp.o:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o
-.PHONY : utilities/plotting.cpp.o
+source/general.cpp.o:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/general.cpp.o
+.PHONY : source/general.cpp.o
 
-utilities/plotting.i: utilities/plotting.cpp.i
+source/general.i: source/general.cpp.i
 
-.PHONY : utilities/plotting.i
+.PHONY : source/general.i
 
 # target to preprocess a source file
-utilities/plotting.cpp.i:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.i
-.PHONY : utilities/plotting.cpp.i
+source/general.cpp.i:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/general.cpp.i
+.PHONY : source/general.cpp.i
 
-utilities/plotting.s: utilities/plotting.cpp.s
+source/general.s: source/general.cpp.s
 
-.PHONY : utilities/plotting.s
+.PHONY : source/general.s
 
 # target to generate assembly for a file
-utilities/plotting.cpp.s:
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.s
-.PHONY : utilities/plotting.cpp.s
+source/general.cpp.s:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/general.cpp.s
+.PHONY : source/general.cpp.s
+
+source/plotting.o: source/plotting.cpp.o
+
+.PHONY : source/plotting.o
+
+# target to build an object file
+source/plotting.cpp.o:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/plotting.cpp.o
+.PHONY : source/plotting.cpp.o
+
+source/plotting.i: source/plotting.cpp.i
+
+.PHONY : source/plotting.i
+
+# target to preprocess a source file
+source/plotting.cpp.i:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/plotting.cpp.i
+.PHONY : source/plotting.cpp.i
+
+source/plotting.s: source/plotting.cpp.s
+
+.PHONY : source/plotting.s
+
+# target to generate assembly for a file
+source/plotting.cpp.s:
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/plotting.cpp.s
+.PHONY : source/plotting.cpp.s
 
 # Help Target
 help:
@@ -270,18 +270,18 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... utilities/data.o"
-	@echo "... utilities/data.i"
-	@echo "... utilities/data.s"
-	@echo "... utilities/fft.o"
-	@echo "... utilities/fft.i"
-	@echo "... utilities/fft.s"
-	@echo "... utilities/general.o"
-	@echo "... utilities/general.i"
-	@echo "... utilities/general.s"
-	@echo "... utilities/plotting.o"
-	@echo "... utilities/plotting.i"
-	@echo "... utilities/plotting.s"
+	@echo "... source/data.o"
+	@echo "... source/data.i"
+	@echo "... source/data.s"
+	@echo "... source/fft.o"
+	@echo "... source/fft.i"
+	@echo "... source/fft.s"
+	@echo "... source/general.o"
+	@echo "... source/general.i"
+	@echo "... source/general.s"
+	@echo "... source/plotting.o"
+	@echo "... source/plotting.i"
+	@echo "... source/plotting.s"
 .PHONY : help
 
 

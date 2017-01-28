@@ -1,9 +1,9 @@
 file(REMOVE_RECURSE
   "CMakeFiles/cpu_proc.dir/main.cpp.o"
-  "CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o"
-  "CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o"
-  "CMakeFiles/cpu_proc.dir/utilities/general.cpp.o"
-  "CMakeFiles/cpu_proc.dir/utilities/data.cpp.o"
+  "CMakeFiles/cpu_proc.dir/source/plotting.cpp.o"
+  "CMakeFiles/cpu_proc.dir/source/fft.cpp.o"
+  "CMakeFiles/cpu_proc.dir/source/general.cpp.o"
+  "CMakeFiles/cpu_proc.dir/source/data.cpp.o"
   "cpu_proc.pdb"
   "cpu_proc"
 )

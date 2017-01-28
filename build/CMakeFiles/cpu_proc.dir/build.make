@@ -81,118 +81,118 @@ CMakeFiles/cpu_proc.dir/main.cpp.o.provides: CMakeFiles/cpu_proc.dir/main.cpp.o.
 CMakeFiles/cpu_proc.dir/main.cpp.o.provides.build: CMakeFiles/cpu_proc.dir/main.cpp.o
 
 
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o: CMakeFiles/cpu_proc.dir/flags.make
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o: ../utilities/plotting.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darryn/Git/netrad-processor/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o -c /home/darryn/Git/netrad-processor/utilities/plotting.cpp
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o: CMakeFiles/cpu_proc.dir/flags.make
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o: ../source/plotting.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darryn/Git/netrad-processor/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/cpu_proc.dir/source/plotting.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpu_proc.dir/source/plotting.cpp.o -c /home/darryn/Git/netrad-processor/source/plotting.cpp
 
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/darryn/Git/netrad-processor/utilities/plotting.cpp > CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.i
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpu_proc.dir/source/plotting.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/darryn/Git/netrad-processor/source/plotting.cpp > CMakeFiles/cpu_proc.dir/source/plotting.cpp.i
 
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/darryn/Git/netrad-processor/utilities/plotting.cpp -o CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.s
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpu_proc.dir/source/plotting.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/darryn/Git/netrad-processor/source/plotting.cpp -o CMakeFiles/cpu_proc.dir/source/plotting.cpp.s
 
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o.requires:
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o.requires:
 
-.PHONY : CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o.requires
+.PHONY : CMakeFiles/cpu_proc.dir/source/plotting.cpp.o.requires
 
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o.provides: CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o.requires
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o.provides.build
-.PHONY : CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o.provides
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o.provides: CMakeFiles/cpu_proc.dir/source/plotting.cpp.o.requires
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/plotting.cpp.o.provides.build
+.PHONY : CMakeFiles/cpu_proc.dir/source/plotting.cpp.o.provides
 
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o.provides.build: CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o
-
-
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o: CMakeFiles/cpu_proc.dir/flags.make
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o: ../utilities/fft.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darryn/Git/netrad-processor/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o -c /home/darryn/Git/netrad-processor/utilities/fft.cpp
-
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpu_proc.dir/utilities/fft.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/darryn/Git/netrad-processor/utilities/fft.cpp > CMakeFiles/cpu_proc.dir/utilities/fft.cpp.i
-
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpu_proc.dir/utilities/fft.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/darryn/Git/netrad-processor/utilities/fft.cpp -o CMakeFiles/cpu_proc.dir/utilities/fft.cpp.s
-
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o.requires:
-
-.PHONY : CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o.requires
-
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o.provides: CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o.requires
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o.provides.build
-.PHONY : CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o.provides
-
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o.provides.build: CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o.provides.build: CMakeFiles/cpu_proc.dir/source/plotting.cpp.o
 
 
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o: CMakeFiles/cpu_proc.dir/flags.make
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o: ../utilities/general.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darryn/Git/netrad-processor/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/cpu_proc.dir/utilities/general.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpu_proc.dir/utilities/general.cpp.o -c /home/darryn/Git/netrad-processor/utilities/general.cpp
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o: CMakeFiles/cpu_proc.dir/flags.make
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o: ../source/fft.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darryn/Git/netrad-processor/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/cpu_proc.dir/source/fft.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpu_proc.dir/source/fft.cpp.o -c /home/darryn/Git/netrad-processor/source/fft.cpp
 
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpu_proc.dir/utilities/general.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/darryn/Git/netrad-processor/utilities/general.cpp > CMakeFiles/cpu_proc.dir/utilities/general.cpp.i
+CMakeFiles/cpu_proc.dir/source/fft.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpu_proc.dir/source/fft.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/darryn/Git/netrad-processor/source/fft.cpp > CMakeFiles/cpu_proc.dir/source/fft.cpp.i
 
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpu_proc.dir/utilities/general.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/darryn/Git/netrad-processor/utilities/general.cpp -o CMakeFiles/cpu_proc.dir/utilities/general.cpp.s
+CMakeFiles/cpu_proc.dir/source/fft.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpu_proc.dir/source/fft.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/darryn/Git/netrad-processor/source/fft.cpp -o CMakeFiles/cpu_proc.dir/source/fft.cpp.s
 
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o.requires:
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o.requires:
 
-.PHONY : CMakeFiles/cpu_proc.dir/utilities/general.cpp.o.requires
+.PHONY : CMakeFiles/cpu_proc.dir/source/fft.cpp.o.requires
 
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o.provides: CMakeFiles/cpu_proc.dir/utilities/general.cpp.o.requires
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/general.cpp.o.provides.build
-.PHONY : CMakeFiles/cpu_proc.dir/utilities/general.cpp.o.provides
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o.provides: CMakeFiles/cpu_proc.dir/source/fft.cpp.o.requires
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/fft.cpp.o.provides.build
+.PHONY : CMakeFiles/cpu_proc.dir/source/fft.cpp.o.provides
 
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o.provides.build: CMakeFiles/cpu_proc.dir/utilities/general.cpp.o
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o.provides.build: CMakeFiles/cpu_proc.dir/source/fft.cpp.o
 
 
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o: CMakeFiles/cpu_proc.dir/flags.make
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o: ../utilities/data.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darryn/Git/netrad-processor/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/cpu_proc.dir/utilities/data.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpu_proc.dir/utilities/data.cpp.o -c /home/darryn/Git/netrad-processor/utilities/data.cpp
+CMakeFiles/cpu_proc.dir/source/general.cpp.o: CMakeFiles/cpu_proc.dir/flags.make
+CMakeFiles/cpu_proc.dir/source/general.cpp.o: ../source/general.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darryn/Git/netrad-processor/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/cpu_proc.dir/source/general.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpu_proc.dir/source/general.cpp.o -c /home/darryn/Git/netrad-processor/source/general.cpp
 
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpu_proc.dir/utilities/data.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/darryn/Git/netrad-processor/utilities/data.cpp > CMakeFiles/cpu_proc.dir/utilities/data.cpp.i
+CMakeFiles/cpu_proc.dir/source/general.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpu_proc.dir/source/general.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/darryn/Git/netrad-processor/source/general.cpp > CMakeFiles/cpu_proc.dir/source/general.cpp.i
 
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpu_proc.dir/utilities/data.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/darryn/Git/netrad-processor/utilities/data.cpp -o CMakeFiles/cpu_proc.dir/utilities/data.cpp.s
+CMakeFiles/cpu_proc.dir/source/general.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpu_proc.dir/source/general.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/darryn/Git/netrad-processor/source/general.cpp -o CMakeFiles/cpu_proc.dir/source/general.cpp.s
 
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o.requires:
+CMakeFiles/cpu_proc.dir/source/general.cpp.o.requires:
 
-.PHONY : CMakeFiles/cpu_proc.dir/utilities/data.cpp.o.requires
+.PHONY : CMakeFiles/cpu_proc.dir/source/general.cpp.o.requires
 
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o.provides: CMakeFiles/cpu_proc.dir/utilities/data.cpp.o.requires
-	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/utilities/data.cpp.o.provides.build
-.PHONY : CMakeFiles/cpu_proc.dir/utilities/data.cpp.o.provides
+CMakeFiles/cpu_proc.dir/source/general.cpp.o.provides: CMakeFiles/cpu_proc.dir/source/general.cpp.o.requires
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/general.cpp.o.provides.build
+.PHONY : CMakeFiles/cpu_proc.dir/source/general.cpp.o.provides
 
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o.provides.build: CMakeFiles/cpu_proc.dir/utilities/data.cpp.o
+CMakeFiles/cpu_proc.dir/source/general.cpp.o.provides.build: CMakeFiles/cpu_proc.dir/source/general.cpp.o
+
+
+CMakeFiles/cpu_proc.dir/source/data.cpp.o: CMakeFiles/cpu_proc.dir/flags.make
+CMakeFiles/cpu_proc.dir/source/data.cpp.o: ../source/data.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/darryn/Git/netrad-processor/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/cpu_proc.dir/source/data.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/cpu_proc.dir/source/data.cpp.o -c /home/darryn/Git/netrad-processor/source/data.cpp
+
+CMakeFiles/cpu_proc.dir/source/data.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cpu_proc.dir/source/data.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/darryn/Git/netrad-processor/source/data.cpp > CMakeFiles/cpu_proc.dir/source/data.cpp.i
+
+CMakeFiles/cpu_proc.dir/source/data.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cpu_proc.dir/source/data.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/darryn/Git/netrad-processor/source/data.cpp -o CMakeFiles/cpu_proc.dir/source/data.cpp.s
+
+CMakeFiles/cpu_proc.dir/source/data.cpp.o.requires:
+
+.PHONY : CMakeFiles/cpu_proc.dir/source/data.cpp.o.requires
+
+CMakeFiles/cpu_proc.dir/source/data.cpp.o.provides: CMakeFiles/cpu_proc.dir/source/data.cpp.o.requires
+	$(MAKE) -f CMakeFiles/cpu_proc.dir/build.make CMakeFiles/cpu_proc.dir/source/data.cpp.o.provides.build
+.PHONY : CMakeFiles/cpu_proc.dir/source/data.cpp.o.provides
+
+CMakeFiles/cpu_proc.dir/source/data.cpp.o.provides.build: CMakeFiles/cpu_proc.dir/source/data.cpp.o
 
 
 # Object files for target cpu_proc
 cpu_proc_OBJECTS = \
 "CMakeFiles/cpu_proc.dir/main.cpp.o" \
-"CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o" \
-"CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o" \
-"CMakeFiles/cpu_proc.dir/utilities/general.cpp.o" \
-"CMakeFiles/cpu_proc.dir/utilities/data.cpp.o"
+"CMakeFiles/cpu_proc.dir/source/plotting.cpp.o" \
+"CMakeFiles/cpu_proc.dir/source/fft.cpp.o" \
+"CMakeFiles/cpu_proc.dir/source/general.cpp.o" \
+"CMakeFiles/cpu_proc.dir/source/data.cpp.o"
 
 # External object files for target cpu_proc
 cpu_proc_EXTERNAL_OBJECTS =
 
 cpu_proc: CMakeFiles/cpu_proc.dir/main.cpp.o
-cpu_proc: CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o
-cpu_proc: CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o
-cpu_proc: CMakeFiles/cpu_proc.dir/utilities/general.cpp.o
-cpu_proc: CMakeFiles/cpu_proc.dir/utilities/data.cpp.o
+cpu_proc: CMakeFiles/cpu_proc.dir/source/plotting.cpp.o
+cpu_proc: CMakeFiles/cpu_proc.dir/source/fft.cpp.o
+cpu_proc: CMakeFiles/cpu_proc.dir/source/general.cpp.o
+cpu_proc: CMakeFiles/cpu_proc.dir/source/data.cpp.o
 cpu_proc: CMakeFiles/cpu_proc.dir/build.make
 cpu_proc: /usr/lib/x86_64-linux-gnu/libopencv_videostab.so.2.4.9
 cpu_proc: /usr/lib/x86_64-linux-gnu/libopencv_ts.so.2.4.9
@@ -223,10 +223,10 @@ CMakeFiles/cpu_proc.dir/build: cpu_proc
 .PHONY : CMakeFiles/cpu_proc.dir/build
 
 CMakeFiles/cpu_proc.dir/requires: CMakeFiles/cpu_proc.dir/main.cpp.o.requires
-CMakeFiles/cpu_proc.dir/requires: CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o.requires
-CMakeFiles/cpu_proc.dir/requires: CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o.requires
-CMakeFiles/cpu_proc.dir/requires: CMakeFiles/cpu_proc.dir/utilities/general.cpp.o.requires
-CMakeFiles/cpu_proc.dir/requires: CMakeFiles/cpu_proc.dir/utilities/data.cpp.o.requires
+CMakeFiles/cpu_proc.dir/requires: CMakeFiles/cpu_proc.dir/source/plotting.cpp.o.requires
+CMakeFiles/cpu_proc.dir/requires: CMakeFiles/cpu_proc.dir/source/fft.cpp.o.requires
+CMakeFiles/cpu_proc.dir/requires: CMakeFiles/cpu_proc.dir/source/general.cpp.o.requires
+CMakeFiles/cpu_proc.dir/requires: CMakeFiles/cpu_proc.dir/source/data.cpp.o.requires
 
 .PHONY : CMakeFiles/cpu_proc.dir/requires
 

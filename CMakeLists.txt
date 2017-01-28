@@ -8,14 +8,14 @@ find_library(FFTW_LIBRARY NAMES fftw3)
 add_executable( 		cpu_proc 
 						main.cpp 
 						main.hpp 
-						utilities/plotting.cpp
-						utilities/plotting.hpp
-						utilities/fft.cpp
-						utilities/fft.hpp
-						utilities/general.cpp
-						utilities/general.hpp
-						utilities/data.cpp
-						utilities/data.hpp
+						source/plotting.cpp
+						source/plotting.hpp
+						source/fft.cpp
+						source/fft.hpp
+						source/general.cpp
+						source/general.hpp
+						source/data.cpp
+						source/data.hpp
 						)
 
 

@@ -31,38 +31,38 @@ sstream
 -
 fstream
 -
-utilities/plotting.hpp
-/home/darryn/Git/netrad-processor/utilities/plotting.hpp
-utilities/fft.hpp
-/home/darryn/Git/netrad-processor/utilities/fft.hpp
-utilities/general.hpp
-/home/darryn/Git/netrad-processor/utilities/general.hpp
-utilities/data.hpp
-/home/darryn/Git/netrad-processor/utilities/data.hpp
+source/plotting.hpp
+/home/darryn/Git/netrad-processor/source/plotting.hpp
+source/fft.hpp
+/home/darryn/Git/netrad-processor/source/fft.hpp
+source/general.hpp
+/home/darryn/Git/netrad-processor/source/general.hpp
+source/data.hpp
+/home/darryn/Git/netrad-processor/source/data.hpp
 
-/home/darryn/Git/netrad-processor/utilities/data.cpp
+/home/darryn/Git/netrad-processor/source/data.cpp
 data.hpp
-/home/darryn/Git/netrad-processor/utilities/data.hpp
+/home/darryn/Git/netrad-processor/source/data.hpp
 
-/home/darryn/Git/netrad-processor/utilities/data.hpp
+/home/darryn/Git/netrad-processor/source/data.hpp
 ../main.hpp
 /home/darryn/Git/netrad-processor/main.hpp
 
-/home/darryn/Git/netrad-processor/utilities/fft.cpp
+/home/darryn/Git/netrad-processor/source/fft.cpp
 fft.hpp
-/home/darryn/Git/netrad-processor/utilities/fft.hpp
+/home/darryn/Git/netrad-processor/source/fft.hpp
 ../main.hpp
 /home/darryn/Git/netrad-processor/main.hpp
 
-/home/darryn/Git/netrad-processor/utilities/fft.hpp
+/home/darryn/Git/netrad-processor/source/fft.hpp
 fftw3.h
 -
 
-/home/darryn/Git/netrad-processor/utilities/general.cpp
+/home/darryn/Git/netrad-processor/source/general.cpp
 general.hpp
-/home/darryn/Git/netrad-processor/utilities/general.hpp
+/home/darryn/Git/netrad-processor/source/general.hpp
 
-/home/darryn/Git/netrad-processor/utilities/general.hpp
+/home/darryn/Git/netrad-processor/source/general.hpp
 ../main.hpp
 /home/darryn/Git/netrad-processor/main.hpp
 iomanip
@@ -70,11 +70,11 @@ iomanip
 time.h
 -
 
-/home/darryn/Git/netrad-processor/utilities/plotting.cpp
+/home/darryn/Git/netrad-processor/source/plotting.cpp
 plotting.hpp
-/home/darryn/Git/netrad-processor/utilities/plotting.hpp
+/home/darryn/Git/netrad-processor/source/plotting.hpp
 
-/home/darryn/Git/netrad-processor/utilities/plotting.hpp
+/home/darryn/Git/netrad-processor/source/plotting.hpp
 opencv2/opencv.hpp
 -
 ../main.hpp

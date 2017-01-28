@@ -3,36 +3,36 @@
 
 CMakeFiles/cpu_proc.dir/main.cpp.o: ../main.cpp
 CMakeFiles/cpu_proc.dir/main.cpp.o: ../main.hpp
-CMakeFiles/cpu_proc.dir/main.cpp.o: ../utilities/data.hpp
-CMakeFiles/cpu_proc.dir/main.cpp.o: ../utilities/fft.hpp
-CMakeFiles/cpu_proc.dir/main.cpp.o: ../utilities/general.hpp
-CMakeFiles/cpu_proc.dir/main.cpp.o: ../utilities/plotting.hpp
+CMakeFiles/cpu_proc.dir/main.cpp.o: ../source/data.hpp
+CMakeFiles/cpu_proc.dir/main.cpp.o: ../source/fft.hpp
+CMakeFiles/cpu_proc.dir/main.cpp.o: ../source/general.hpp
+CMakeFiles/cpu_proc.dir/main.cpp.o: ../source/plotting.hpp
 
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o: ../main.hpp
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o: ../utilities/data.cpp
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o: ../utilities/data.hpp
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o: ../utilities/fft.hpp
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o: ../utilities/general.hpp
-CMakeFiles/cpu_proc.dir/utilities/data.cpp.o: ../utilities/plotting.hpp
+CMakeFiles/cpu_proc.dir/source/data.cpp.o: ../main.hpp
+CMakeFiles/cpu_proc.dir/source/data.cpp.o: ../source/data.cpp
+CMakeFiles/cpu_proc.dir/source/data.cpp.o: ../source/data.hpp
+CMakeFiles/cpu_proc.dir/source/data.cpp.o: ../source/fft.hpp
+CMakeFiles/cpu_proc.dir/source/data.cpp.o: ../source/general.hpp
+CMakeFiles/cpu_proc.dir/source/data.cpp.o: ../source/plotting.hpp
 
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o: ../main.hpp
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o: ../utilities/data.hpp
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o: ../utilities/fft.cpp
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o: ../utilities/fft.hpp
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o: ../utilities/general.hpp
-CMakeFiles/cpu_proc.dir/utilities/fft.cpp.o: ../utilities/plotting.hpp
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o: ../main.hpp
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o: ../source/data.hpp
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o: ../source/fft.cpp
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o: ../source/fft.hpp
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o: ../source/general.hpp
+CMakeFiles/cpu_proc.dir/source/fft.cpp.o: ../source/plotting.hpp
 
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o: ../main.hpp
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o: ../utilities/data.hpp
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o: ../utilities/fft.hpp
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o: ../utilities/general.cpp
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o: ../utilities/general.hpp
-CMakeFiles/cpu_proc.dir/utilities/general.cpp.o: ../utilities/plotting.hpp
+CMakeFiles/cpu_proc.dir/source/general.cpp.o: ../main.hpp
+CMakeFiles/cpu_proc.dir/source/general.cpp.o: ../source/data.hpp
+CMakeFiles/cpu_proc.dir/source/general.cpp.o: ../source/fft.hpp
+CMakeFiles/cpu_proc.dir/source/general.cpp.o: ../source/general.cpp
+CMakeFiles/cpu_proc.dir/source/general.cpp.o: ../source/general.hpp
+CMakeFiles/cpu_proc.dir/source/general.cpp.o: ../source/plotting.hpp
 
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o: ../main.hpp
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o: ../utilities/data.hpp
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o: ../utilities/fft.hpp
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o: ../utilities/general.hpp
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o: ../utilities/plotting.cpp
-CMakeFiles/cpu_proc.dir/utilities/plotting.cpp.o: ../utilities/plotting.hpp
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o: ../main.hpp
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o: ../source/data.hpp
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o: ../source/fft.hpp
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o: ../source/general.hpp
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o: ../source/plotting.cpp
+CMakeFiles/cpu_proc.dir/source/plotting.cpp.o: ../source/plotting.hpp
 
