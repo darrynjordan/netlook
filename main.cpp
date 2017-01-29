@@ -25,6 +25,7 @@ int DOPPLERSIZE 	= 64;
 int UPDATELINE 		= 10000;
 int RANGESIZE 		= 2048;
 int RANGELINES 		= 130000;
+int THREADS			= 2;
 
 
 //allocate memory
@@ -52,6 +53,10 @@ int main(int argc, char *argv[])
 	//doppOn = *argv[1];	
 	initTerminal();	
 	startTime();
+		
+	fftw_init_threads();
+	fftw_plan_with_nthreads(THREADS);
+
 	popLookUpTables();
 	initOpenCV();	
 	loadRefData();	

@@ -4,6 +4,7 @@ project( cpu_proc )
 find_package( OpenCV REQUIRED )
 find_library(FFTW_LIBRARY NAMES fftw3)
 
+message(${CMAKE_CXX_FLAGS_RELEASE})
 
 add_executable( 		cpu_proc 
 						main.cpp 
@@ -22,4 +23,5 @@ add_executable( 		cpu_proc
 target_link_libraries( 	cpu_proc 
 						${OpenCV_LIBS} 
 						${FFTW_LIBRARY}
+						-lfftw3_threads
 						)

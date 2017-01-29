@@ -26,6 +26,7 @@ void initTerminal(void)
 	printf("Number of Range Lines:\t%i\n", RANGELINES);
 	printf("Samples per Range Line:\t%i\n", RANGESIZE);
 	printf("Zero Padded Size:\t%i\n", PADRANGESIZE);
+	printf("Threads for FFTW :\t%i\n", THREADS);
 	printf("========================================\n");
 	printf("\n");
 
