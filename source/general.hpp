@@ -4,6 +4,7 @@
 #include "../main.hpp"
 #include <iomanip> 
 #include <time.h>
+#include <sys/time.h>
 
 enum window {HANNING, HAMMING, BLACKMAN};
 

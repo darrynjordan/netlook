@@ -6,8 +6,8 @@
 #include "main.hpp"
 
 //globals
-clock_t 	tStart, tEnd;	
-clock_t 	t1, t2;
+double 	tStart, tEnd;	
+double 	t1, t2;
 int			dopplerDataStart = 0; 
 int			dopplerThresholdSlider = 0;
 int 		processingDelay = 0;

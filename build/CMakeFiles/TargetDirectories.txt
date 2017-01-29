@@ -1,3 +1,0 @@
-/home/darryn/Git/netrad-processor/build/CMakeFiles/edit_cache.dir
-/home/darryn/Git/netrad-processor/build/CMakeFiles/rebuild_cache.dir
-/home/darryn/Git/netrad-processor/build/CMakeFiles/cpu_proc.dir

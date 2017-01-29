@@ -33,13 +33,17 @@ void initTerminal(void)
 
 float getTime(void)
 {
-	tEnd = clock();
-	return ((float)tEnd - (float)tStart)/CLOCKS_PER_SEC;
+	struct timeval time;
+    gettimeofday(&time,NULL);
+	tEnd = (double)time.tv_sec + (double)time.tv_usec * .000001;
+	return (float)(tEnd - tStart);
 }
 
 void startTime(void)
 {
-    tStart = clock();
+	struct timeval time;
+    gettimeofday(&time,NULL);
+	tStart = (double)time.tv_sec + (double)time.tv_usec * .000001;
 }
 
 void printMsg(std::string msg)
