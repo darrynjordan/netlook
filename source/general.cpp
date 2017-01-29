@@ -3,8 +3,8 @@
 void initTerminal(void)
 {
 	system("clear\n");
-	printf("NeXtRad ARD Processor\n");
-	printf("---------------------\n");
+	printf("NetRAD RTI Processor\n");
+	printf("--------------------\n");
 	printf("\n");		
 
 	if (doppOn)
