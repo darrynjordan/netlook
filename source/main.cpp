@@ -1,4 +1,4 @@
-//	CPU Pulse Compressor and Doppler Processor for NetRAD
+//	Pulse Compressor and Doppler Processor for NetRAD
 //	written by: Darryn Jordan
 // 	email: jrddar001@myuct.ac.za
 
@@ -6,8 +6,7 @@
 #include "main.hpp"
 
 //globals
-double 	tStart, tEnd;	
-double 	t1, t2;
+double 		tStart, tEnd;	
 int			dopplerDataStart = 0; 
 int			dopplerThresholdSlider = 0;
 int 		processingDelay = 0;
@@ -25,7 +24,7 @@ int DOPPLERSIZE 	= 64;
 int UPDATELINE 		= 10000;
 int RANGESIZE 		= 2048;
 int RANGELINES 		= 130000;
-int THREADS			= 2;
+int THREADS			= 1;
 
 
 //allocate memory
@@ -89,13 +88,12 @@ void matchedFilter(void)
 		postProcessMatched();
 		updateWaterfall(i, matchedImageBuffer);
 
-		if (doppOn == true)
+		if (doppOn)
 		{
 			hilbertTransform();		//unnecessary cycles			
 			popDopplerData(i); 		
 			processDoppler(i);		
-		}		
-			
+		}					
 	}
 }
 
@@ -103,7 +101,6 @@ void processDoppler(int rangeLine)
 {
 	if ((rangeLine + 1 - dopplerDataStart) == DOPPLERSIZE)  //check that dopplerData is full
 	{
-		//t1 = clock();		
 		for (int i = 0; i < PADRANGESIZE; i++)		
 		{
 			popDopplerBuffer(i);	
@@ -112,9 +109,6 @@ void processDoppler(int rangeLine)
 			updateDoppler(dopplerImageBuffer);	
 		}
 		plotDoppler();
-		//t2 = clock();
-		//timePlot.push_back(((float)t2 - (float)t1)/CLOCKS_PER_SEC);
-		//std::cout << std::setprecision (5) << std::fixed << ((float)t2 - (float)t1)/CLOCKS_PER_SEC * 1000 << std::endl;
 	}
 }
 
