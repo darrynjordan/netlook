@@ -2,6 +2,7 @@
 #define FFT_HPP
 
 #include <fftw3.h>
+#include "main.hpp"
 
 void fftDopplerData(void);
 void fftRefData(void);

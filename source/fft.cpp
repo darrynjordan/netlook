@@ -1,5 +1,4 @@
 #include "fft.hpp"
-#include "../main.hpp"
 
 //fftw plans
 fftw_plan rangePlan   = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRangeBuffer, fftRangeBuffer, FFTW_MEASURE);

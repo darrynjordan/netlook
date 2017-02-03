@@ -1,7 +1,7 @@
 #ifndef GENERAL_HPP
 #define GENERAL_HPP
 
-#include "../main.hpp"
+#include "main.hpp"
 #include <iomanip> 
 #include <time.h>
 #include <sys/time.h>

@@ -1,3 +1,4 @@
+# netrad-quicklook
 To run, the processor requires a reference signal, a dataset and a few other parameters. 
 Some default configurations are available in the data.cpp file under 'source'.
 Please ensure that the file paths in the data.cpp file are correct.

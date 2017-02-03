@@ -1,27 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
-project( cpu_proc )
+project(quicklook)
 
-find_package( OpenCV REQUIRED )
+find_package(OpenCV REQUIRED)
 find_library(FFTW_LIBRARY NAMES fftw3)
 
-message(${CMAKE_CXX_FLAGS_RELEASE})
+#message(${CMAKE_CXX_FLAGS_RELEASE})
 
-add_executable( 		cpu_proc 
-						main.cpp 
-						main.hpp 
-						source/plotting.cpp
-						source/plotting.hpp
-						source/fft.cpp
-						source/fft.hpp
-						source/general.cpp
-						source/general.hpp
-						source/data.cpp
-						source/data.hpp
-						)
+file(GLOB CPPFILES "source/*.cpp" "source/*.h")
+add_executable(quicklook ${CPPFILES})
 
-
-target_link_libraries( 	cpu_proc 
-						${OpenCV_LIBS} 
-						${FFTW_LIBRARY}
-						-lfftw3_threads
-						)
+target_link_libraries(quicklook ${OpenCV_LIBS} ${FFTW_LIBRARY} -lfftw3_threads )

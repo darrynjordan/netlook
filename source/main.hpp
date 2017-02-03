@@ -14,10 +14,10 @@
 #include <sstream>
 #include <fstream>
 
-#include "source/plotting.hpp"
-#include "source/fft.hpp"
-#include "source/general.hpp"
-#include "source/data.hpp"
+#include "plotting.hpp"
+#include "fft.hpp"
+#include "general.hpp"
+#include "data.hpp"
 
 //parameters
 

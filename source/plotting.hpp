@@ -3,7 +3,7 @@
 
 //Libraries
 #include <opencv2/opencv.hpp>
-#include "../main.hpp"
+#include "main.hpp"
 
 //Functions
 void plotWaterfall(void);

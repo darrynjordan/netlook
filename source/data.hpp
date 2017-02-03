@@ -1,7 +1,7 @@
 #ifndef DATA_HPP
 #define DATA_HPP
 
-#include "../main.hpp"
+#include "main.hpp"
 
 enum data {D1, D2, D3, D4, D5};
 
