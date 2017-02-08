@@ -86,7 +86,7 @@ void matchedFilter(void)
 		complxMulti();			
 		ifftMatchedData();								
 		postProcessMatched();
-		updateWaterfall(i, matchedImageBuffer);
+		updateWaterfall(i, realRangeBuffer);
 
 		if (doppOn)
 		{
@@ -138,7 +138,7 @@ void popDopplerBuffer(int dopplerLine)
 
 void postProcessMatched(void)
 {
-	float maxResult = 0.0f;
+	/*float maxResult = 0.0f;
 
 	for (int j = 0; j < PADRANGESIZE; j++)
 	{
@@ -149,7 +149,7 @@ void postProcessMatched(void)
 	}
 
 	for (int j = 0; j < PADRANGESIZE; j++)
-		matchedImageBuffer[j] = (uint8_t)((realRangeBuffer[j]/maxResult)*255);
+		matchedImageBuffer[j] = (uint8_t)((realRangeBuffer[j]/maxResult)*255);*/	
 }
 
 void postProcessDoppler(void)

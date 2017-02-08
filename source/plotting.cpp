@@ -32,13 +32,40 @@ void initOpenCV(void)
 	printMsg("Initialized OpenCV");
 }
 
-void updateWaterfall(int rangeLine, uint8_t  *imageValues)
+void updateWaterfall(int rangeLine, double *imageValues)
 {
-	cv::Mat row = cv::Mat(1, PADRANGESIZE, CV_8U, imageValues);
-	waterImage.push_back(row);
-			
+	cv::Mat matchedRow = cv::Mat(1, PADRANGESIZE, CV_64F, imageValues);
+	
+	cv::abs(matchedRow);	
+
+	waterImage.push_back(matchedRow);
+	
 	if (((rangeLine%(UPDATELINE-1) == 0) || rangeLine == (RANGELINES-1)) && rangeLine != 0)
+	{
 		plotWaterfall();
+	}
+}
+
+void plotWaterfall(void)
+{					
+	cv::resize(waterImage, resizedWaterImage, waterSize);		
+	cv::log(resizedWaterImage, resizedWaterImage);
+	cv::normalize(resizedWaterImage, resizedWaterImage, 0.0, 1.0, cv::NORM_MINMAX);
+
+	cv::Mat processedImage;	
+	resizedWaterImage.convertTo(processedImage, CV_8U, 255.0);	
+	
+	cv::equalizeHist(processedImage, processedImage);
+
+	cv::applyColorMap(processedImage, processedImage, waterfallColourMapSlider);	
+	cv::transpose(processedImage, processedImage);
+	cv::flip(processedImage, processedImage, 0);
+
+	cv::imshow("Waterfall Plot", processedImage);
+	//cv::imwrite("waterfall_plot.png", resizedWaterImage);
+	cv::waitKey(1);	
+	processedImage.release();
+	//waterImage.release();
 }
 
 void updateDoppler(uint8_t  *imageValues)
@@ -47,34 +74,18 @@ void updateDoppler(uint8_t  *imageValues)
 	doppImage.push_back(row);
 }
 
-void plotWaterfall(void)
-{					
-		cv::resize(waterImage, resizedWaterImage, waterSize);	
-		cv::equalizeHist(resizedWaterImage, resizedWaterImage);
-
-		cv::applyColorMap(resizedWaterImage, resizedWaterImage, waterfallColourMapSlider);	
-		cv::transpose(resizedWaterImage, resizedWaterImage);
-		cv::flip(resizedWaterImage, resizedWaterImage, 0);
-
-		cv::imshow("Waterfall Plot", resizedWaterImage);
-		//cv::imwrite("waterfall_plot.png", resizedWaterImage);
-		cv::waitKey(1);	
-		resizedWaterImage.release();
-		//waterImage.release();
-}
-
 void plotDoppler(void)
 {
-		cv::resize(doppImage, resizedDoppImage, doppSize);	
-		doppImage.release();
-		cv::applyColorMap(resizedDoppImage, resizedDoppImage, dopplerColourMapSlider);
-		cv::flip(resizedDoppImage, resizedDoppImage, 0);
-	
-		cv::imshow("Doppler Plot", resizedDoppImage);
-		//cv::imwrite("doppler_plot.png", resizedDoppImage);
-		cv::waitKey(1);
-		resizedDoppImage.release();	
-		doppImage.release();
+	cv::resize(doppImage, resizedDoppImage, doppSize);	
+	doppImage.release();
+	cv::applyColorMap(resizedDoppImage, resizedDoppImage, dopplerColourMapSlider);
+	cv::flip(resizedDoppImage, resizedDoppImage, 0);
+
+	cv::imshow("Doppler Plot", resizedDoppImage);
+	//cv::imwrite("doppler_plot.png", resizedDoppImage);
+	cv::waitKey(1);
+	resizedDoppImage.release();	
+	doppImage.release();
 }
 
 void GNUplot(void)
