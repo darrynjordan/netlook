@@ -72,7 +72,7 @@ extern int 			RANGELINES;
 extern int 			RANGESIZE;
 extern int 			DOPPLERSIZE;
 extern int 			UPDATELINE;
-extern int 			THREADS;
+extern int 			FFTW_THREADS;
 
 
 extern std::vector<float> timePlot;

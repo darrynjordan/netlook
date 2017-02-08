@@ -8,7 +8,7 @@
 //Functions
 void plotWaterfall(void);
 void plotDoppler(void);
-void updateWaterfall(int rangeLine, uint8_t  *imageValues);
+void updateWaterfall(int rangeLine, uint8_t *imageValues);
 void updateDoppler(uint8_t  *imageValues);
 void initOpenCV(void);
 void GNUplot(void);

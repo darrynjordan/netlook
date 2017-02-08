@@ -10,7 +10,7 @@ double 		tStart, tEnd;
 int			dopplerDataStart = 0; 
 int			dopplerThresholdSlider = 0;
 int 		processingDelay = 0;
-bool 		doppOn = false;
+bool 		doppOn = true;
 bool 		suggestOn = false;
 
 std::vector<float> timePlot;
@@ -24,7 +24,7 @@ int DOPPLERSIZE 	= 64;
 int UPDATELINE 		= 10000;
 int RANGESIZE 		= 2048;
 int RANGELINES 		= 130000;
-int THREADS			= 1;
+int FFTW_THREADS	= 1;
 
 
 //allocate memory
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 	startTime();
 		
 	fftw_init_threads();
-	fftw_plan_with_nthreads(THREADS);
+	fftw_plan_with_nthreads(FFTW_THREADS);
 
 	popLookUpTables();
 	initOpenCV();	
@@ -70,8 +70,8 @@ int main(int argc, char *argv[])
 	//GNUplot();
 	std::cout << "\nAverage Time per Line: "<< std::setprecision (2) << std::fixed << getTime()/RANGELINES * 1000000 << " us\n" << std::endl;
 
-	//cv::waitKey(0);
 	freeMem();
+	cv::waitKey(0);
 	return 0;
 }
 

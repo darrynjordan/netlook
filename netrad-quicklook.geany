@@ -27,6 +27,12 @@ long_line_column=72
 
 [files]
 current_page=0
+FILE_NAME_0=1122;C++;0;EUTF-8;1;1;0;%2Fhome%2Fdarryn%2FGit%2Fnetrad-quicklook%2Fsource%2Fmain.hpp;0;4
+FILE_NAME_1=2015;C++;0;EUTF-8;1;1;0;%2Fhome%2Fdarryn%2FGit%2Fnetrad-quicklook%2Fsource%2Fmain.cpp;0;4
+FILE_NAME_2=770;C++;0;EUTF-8;1;1;0;%2Fhome%2Fdarryn%2FGit%2Fnetrad-quicklook%2Fsource%2Fgeneral.cpp;0;4
+FILE_NAME_3=190;C++;0;EUTF-8;1;1;0;%2Fhome%2Fdarryn%2FGit%2Fnetrad-quicklook%2Fsource%2Fgeneral.hpp;0;4
+FILE_NAME_4=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fdarryn%2FGit%2Fnetrad-quicklook%2Fsource%2Fplotting.cpp;0;4
+FILE_NAME_5=314;C++;0;EUTF-8;1;1;0;%2Fhome%2Fdarryn%2FGit%2Fnetrad-quicklook%2Fsource%2Fplotting.hpp;0;4
 
 [VTE]
-last_dir=/home/darryn/Git
+last_dir=/home/darryn/Git/netrad-quicklook/build
