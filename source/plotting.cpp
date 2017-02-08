@@ -53,7 +53,7 @@ void plotWaterfall(void)
 	cv::normalize(resizedWaterImage, resizedWaterImage, 0.0, 1.0, cv::NORM_MINMAX);
 
 	cv::Mat processedImage;	
-	resizedWaterImage.convertTo(processedImage, CV_8U, 255.0);	
+	resizedWaterImage.convertTo(processedImage, CV_8U, 255);	
 	
 	cv::equalizeHist(processedImage, processedImage);
 
