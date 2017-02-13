@@ -21,7 +21,7 @@ int REFSIZE 			= netrad.getRefSigSize();
 int PADRANGESIZE 		= netrad.getPaddedSize();
 
 int DOPPLERSIZE 		= 64;
-int UPDATELINE 			= 100;
+int UPDATELINE 			= 13000;
 int RANGESIZE 			= 2048;
 int RANGELINES 			= 130000;
 int FFTW_THREADS		= 1;
@@ -138,6 +138,7 @@ void perThread(int id)
 		}
 		fputs("e\n", pipe_gp);
 		pclose(pipe_gp);*/
+		
 		mutex.lock();
 		updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);
 		mutex.unlock();

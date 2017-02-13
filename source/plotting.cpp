@@ -47,7 +47,7 @@ void updateWaterfall(int rangeLine, double *imageValues)
 	if (((rangeLine%(UPDATELINE-1) == 0) || rangeLine == (RANGELINES-1)) && rangeLine != 0)
 	{
 		plotWaterfall();
-		cv::waitKey(0);
+		//cv::waitKey(0);
 	}
 }
 
