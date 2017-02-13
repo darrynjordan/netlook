@@ -11,13 +11,6 @@ void ifftMatchedData(void);
 void hilbertTransform(void);
 void freePlanMemory(void);
 
-extern fftw_plan rangePlan;
-extern fftw_plan refPlan;
-extern fftw_plan resultPlan;
-
-extern fftw_plan hilbertPlan;
-extern fftw_plan dopplerPlan;
-
 #endif
 
 

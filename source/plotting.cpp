@@ -90,7 +90,7 @@ void plotDoppler(void)
 
 void GNUplot(void)
 {
-	FILE *pipe_gp = popen("gnuplot", "w");	
+/*	FILE *pipe_gp = popen("gnuplot", "w");	
 
 	fputs("set terminal postscript eps enhanced color font 'Helvetica,20' linewidth 2\n", pipe_gp);
 	fputs("set title 'Doppler Processing Time per Range Line'\n", pipe_gp);	
@@ -111,5 +111,5 @@ void GNUplot(void)
 		//fprintf(pipe_gp, "%i %f\n", i, (sqrt(dopplerBuffer[i][0]*dopplerBuffer[i][0] + dopplerBuffer[i][1]*dopplerBuffer[i][1]))); 
 
 	fputs("e\n", pipe_gp);
-	pclose(pipe_gp);
+	pclose(pipe_gp);*/
 }

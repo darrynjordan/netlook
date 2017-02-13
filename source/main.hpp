@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <cstdio>
+#include <boost/thread.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -27,15 +28,18 @@
 #define MAXPOW 			20
 
 //functions
+void allocateMemory(void);
 void loadRangeData(void);
 void loadRefData(void);
-void popRangeBuffer(int rangeLine);
+void popRangeBuffer(int rangeLine, double* realRangeBuffer);
 void popDopplerData(int rangeLine);
 void popDopplerBuffer(int dopplerLine);
 void complxConjRef(void);
 void complxMulti(void);
-void matchedFilter(void);
+void perThread(int id, int start_index);
 void freeMem(void);
+void timePerLine(void);
+
 
 void postProcessMatched(void);
 void postProcessDoppler(void);
@@ -48,9 +52,7 @@ uint16_t getRangeOffset(void);
 
 //globals
 extern uint16_t 	*realDataBuffer;
-extern double   	*realRangeBuffer;
 extern double   	*realRefBuffer;
-extern uint8_t  	*matchedImageBuffer;
 extern uint8_t  	*dopplerImageBuffer;
 extern fftw_complex *fftRangeBuffer;
 extern fftw_complex *fftRefBuffer; 
@@ -73,8 +75,7 @@ extern int 			RANGESIZE;
 extern int 			DOPPLERSIZE;
 extern int 			UPDATELINE;
 extern int 			FFTW_THREADS;
-
-
-extern std::vector<float> timePlot;
+extern int 			THREADS;
+extern int 			RANGELINESPERTHREAD;
 
 #endif

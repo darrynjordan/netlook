@@ -20,13 +20,15 @@ void initTerminal(void)
 	}
 	else
 		printf("Zero Padding Size Suggestions:\tOFF\n");
-			
+		
 	printf("\n");
 	printf("========================================\n");
 	printf("Number of Range Lines:\t%i\n", RANGELINES);
 	printf("Samples per Range Line:\t%i\n", RANGESIZE);
 	printf("Zero Padded Size:\t%i\n", PADRANGESIZE);
-	printf("Threads for FFTW :\t%i\n", FFTW_THREADS);
+	printf("Threads for FFTW:\t%i\n", FFTW_THREADS);
+	printf("Concurrent Threads:\t%i\n", THREADS);
+	printf("Range Lines per Thread:\t%i\n", RANGELINESPERTHREAD);
 	printf("========================================\n");
 	printf("\n");
 

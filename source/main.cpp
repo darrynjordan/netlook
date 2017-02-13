@@ -5,32 +5,38 @@
 
 #include "main.hpp"
 
-//globals
+//=====================================================================================================
+// Global Variables
+//=====================================================================================================
+
 double 		tStart, tEnd;	
 int			dopplerDataStart = 0; 
 int			dopplerThresholdSlider = 0;
 int 		processingDelay = 0;
-bool 		doppOn = true;
+bool 		doppOn = false;
 bool 		suggestOn = false;
-
-std::vector<float> timePlot;
 
 radarData netrad(D5);
 
-int REFSIZE 		= netrad.getRefSigSize();
-int PADRANGESIZE 	= netrad.getPaddedSize();
+int REFSIZE 			= netrad.getRefSigSize();
+int PADRANGESIZE 		= netrad.getPaddedSize();
 
-int DOPPLERSIZE 	= 64;
-int UPDATELINE 		= 10000;
-int RANGESIZE 		= 2048;
-int RANGELINES 		= 130000;
-int FFTW_THREADS	= 1;
+int DOPPLERSIZE 		= 64;
+int UPDATELINE 			= 10000;
+int RANGESIZE 			= 2048;
+int RANGELINES 			= 130000;
+int FFTW_THREADS		= 1;
+int THREADS				= 1;
 
+int RANGELINESPERTHREAD = RANGELINES/THREADS;
 
-//allocate memory
+//=====================================================================================================
+// Allocate Memory
+//=====================================================================================================
+
 uint16_t *realDataBuffer      = (uint16_t*)malloc(RANGELINES*RANGESIZE*sizeof(uint16_t));
 
-double   *realRangeBuffer     = (double*)malloc(PADRANGESIZE*sizeof(double));
+double   *realRangeBuffer 	  = (double*)malloc(PADRANGESIZE*sizeof(double));
 double   *realRefBuffer       = (double*)malloc(PADRANGESIZE*sizeof(double));
 
 uint8_t  *matchedImageBuffer  = (uint8_t*)malloc(PADRANGESIZE*sizeof(uint8_t));
@@ -47,42 +53,58 @@ fftw_complex *dopplerData     = (fftw_complex*)malloc((PADRANGESIZE*DOPPLERSIZE)
 float *refWindow			  = (float*)malloc(REFSIZE*sizeof(float));
 float *doppWindow			  = (float*)malloc(DOPPLERSIZE*sizeof(float));
 
+//=====================================================================================================
+// Setup FFTW Plans
+//=====================================================================================================
+
+fftw_plan refPlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuffer, FFTW_ESTIMATE);
+fftw_plan rangePlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRangeBuffer, fftRangeBuffer, FFTW_MEASURE);
+fftw_plan resultPlan  = fftw_plan_dft_c2r_1d(PADRANGESIZE, hilbertBuffer, realRangeBuffer, FFTW_MEASURE | FFTW_PRESERVE_INPUT);
+fftw_plan hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, FFTW_MEASURE);
+fftw_plan dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, dopplerBuffer, dopplerBuffer, FFTW_FORWARD, FFTW_MEASURE);	
+
 int main(int argc, char *argv[])
 {
-	//doppOn = *argv[1];	
+	boost::thread_group threadGroup;
+	boost::thread threads[THREADS];		
+	
 	initTerminal();	
 	startTime();
-		
+
 	fftw_init_threads();
 	fftw_plan_with_nthreads(FFTW_THREADS);
 
 	popLookUpTables();
 	initOpenCV();	
-	loadRefData();	
-	
+	loadRefData();		
 	normRefData();	
-	loadRangeData();
-
-	fftRefData();		
-	complxConjRef();
+	fftw_execute(refPlan);	
+	complxConjRef();		
 	
-	matchedFilter();
-	//GNUplot();
-	std::cout << "\nAverage Time per Line: "<< std::setprecision (2) << std::fixed << getTime()/RANGELINES * 1000000 << " us\n" << std::endl;
-
+	loadRangeData();
+	
+	for (int i = 0; i < THREADS; i++)
+	{
+		threadGroup.create_thread(boost::bind(&perThread, i, i*RANGELINESPERTHREAD));
+	}
+	
+	threadGroup.join_all();		
+	
 	freeMem();
 	cv::waitKey(0);
+	
 	return 0;
 }
 
-float sum = 0;
 
-void matchedFilter(void)
+void perThread(int id, int start_index)
 {
-	for (int i = 0; i < RANGELINES; i++)
+	std::cout << "Thread: " << id << ", Index: " << start_index << std::endl;	
+	
+	for (int i = start_index; i < start_index + RANGELINESPERTHREAD; i++)
 	{
-		popRangeBuffer(i);	
-		fftRangeData();			
+		popRangeBuffer(i, realRangeBuffer);	
+		fftw_execute(rangePlan);		
 		complxMulti();			
 		ifftMatchedData();								
 		postProcessMatched();
@@ -95,7 +117,12 @@ void matchedFilter(void)
 			processDoppler(i);		
 		}					
 	}
+	
+	free(realRangeBuffer);
+	
+	timePerLine();
 }
+
 
 void processDoppler(int rangeLine)
 {
@@ -196,22 +223,15 @@ void complxMulti(void)
 	}
 }
 
-void popRangeBuffer(int rangeLine)
+void popRangeBuffer(int rangeLine, double* realRangeBuffer)
 {
 	int start = rangeLine*RANGESIZE;
 
-	/*uint64_t dataSum = 0;	
-	float offset = 0;
-	for(int i = 0; i < RANGESIZE; i++)
-		dataSum += realDataBuffer[i + start];		//MAJOR SPEED REDUCTION
-	
-	offset = dataSum/(RANGESIZE);	*/
-		
 	//populate complex range data and remove offset	
 	for (int i = 0; i < PADRANGESIZE; i++)
 	{
 		if (i < RANGESIZE)
-			realRangeBuffer[i] = realDataBuffer[i + start] - ADCOFFSET;
+			realRangeBuffer[i] = (double)(realDataBuffer[i + start] - ADCOFFSET);
 		else
 			realRangeBuffer[i] = 0; 
 	}
@@ -296,17 +316,22 @@ void freeMem(void)
 	fftw_free(dopplerBuffer);
 	fftw_free(dopplerData);
 
-	free(realDataBuffer);
-	free(realRangeBuffer);
+	free(realDataBuffer);	
 	free(realRefBuffer);
-
-	fftw_destroy_plan(rangePlan);	
-	fftw_destroy_plan(refPlan);	
+	
+	fftw_destroy_plan(rangePlan);		
 	fftw_destroy_plan(resultPlan);	
 	fftw_destroy_plan(hilbertPlan);	
 	fftw_destroy_plan(dopplerPlan);
+	fftw_destroy_plan(refPlan);
 
 	printMsg("Memory Free \n");
+}
+
+
+void timePerLine(void)
+{
+	std::cout << "\nAverage Time per Line: "<< std::setprecision (2) << std::fixed << getTime()/RANGELINES * 1000000 << " us\n" << std::endl;
 }
 
 
