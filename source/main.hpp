@@ -38,7 +38,6 @@ void complxConjRef(void);
 
 void perThread(int id);
 void freeMem(void);
-void timePerLine(void);
 
 
 void postProcessMatched(void);

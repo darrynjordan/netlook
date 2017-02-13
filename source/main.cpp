@@ -101,8 +101,6 @@ void perThread(int id)
 	fftw_plan rangePlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, &realRangeBuffer[id*PADRANGESIZE], &fftRangeBuffer[id*(PADRANGESIZE/2 + 1)], FFTW_MEASURE);
 	fftw_plan resultPlan = fftw_plan_dft_c2r_1d(PADRANGESIZE, &hilbertBuffer[id*PADRANGESIZE], &realRangeBuffer[id*PADRANGESIZE], FFTW_MEASURE | FFTW_PRESERVE_INPUT);
 	
-	std::cout << "Thread: " << id << ", Index: " << start_index << std::endl;
-	
 	for (int i = 0; i < RANGELINESPERTHREAD; i++)
 	{
 		i += start_index;
@@ -148,7 +146,7 @@ void perThread(int id)
 	fftw_destroy_plan(rangePlan);
 	fftw_destroy_plan(resultPlan);	
 	
-	timePerLine();
+	std::cout << "(thread "<< id << ") Average Time per Line: "<< std::setprecision (2) << std::fixed << getTime()/RANGELINES * 1000000 << " us" << std::endl;
 }
 
 
@@ -331,13 +329,6 @@ void freeMem(void)
 
 	printMsg("Memory Free \n");
 }
-
-
-void timePerLine(void)
-{
-	std::cout << "\nAverage Time per Line: "<< std::setprecision (2) << std::fixed << getTime()/RANGELINES * 1000000 << " us\n" << std::endl;
-}
-
 
 
 
