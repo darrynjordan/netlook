@@ -59,6 +59,8 @@ fftw_plan refPlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuff
 fftw_plan hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, FFTW_MEASURE);
 fftw_plan dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, dopplerBuffer, dopplerBuffer, FFTW_FORWARD, FFTW_MEASURE);	
 
+boost::mutex mutex;
+
 int main(int argc, char *argv[])
 {
 	boost::thread_group threadGroup;
@@ -136,8 +138,9 @@ void perThread(int id)
 		}
 		fputs("e\n", pipe_gp);
 		pclose(pipe_gp);*/
-		
+		mutex.lock();
 		updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);
+		mutex.unlock();
 
 		/*if (doppOn)
 		{
