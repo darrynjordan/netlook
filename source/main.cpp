@@ -21,7 +21,7 @@ int REFSIZE 			= netrad.getRefSigSize();
 int PADRANGESIZE 		= netrad.getPaddedSize();
 
 int DOPPLERSIZE 		= 64;
-int UPDATELINE 			= 10000;
+int UPDATELINE 			= 100;
 int RANGESIZE 			= 2048;
 int RANGELINES 			= 130000;
 int FFTW_THREADS		= 1;
@@ -98,40 +98,44 @@ void perThread(int id)
 {
 	int start_index = id*RANGELINESPERTHREAD;
 	
-	fftw_plan rangePlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, &realRangeBuffer[id*PADRANGESIZE], &fftRangeBuffer[id*(PADRANGESIZE/2 + 1)], FFTW_MEASURE);
+	fftw_plan rangePlan  = fftw_plan_dft_r2c_1d(PADRANGESIZE, &realRangeBuffer[id*PADRANGESIZE], &fftRangeBuffer[id*(PADRANGESIZE/2 + 1)], FFTW_MEASURE);
 	fftw_plan resultPlan = fftw_plan_dft_c2r_1d(PADRANGESIZE, &hilbertBuffer[id*PADRANGESIZE], &realRangeBuffer[id*PADRANGESIZE], FFTW_MEASURE | FFTW_PRESERVE_INPUT);
 	
-	for (int i = 0; i < RANGELINESPERTHREAD; i++)
+	for (int i = start_index; i < start_index + RANGELINESPERTHREAD; i++)
 	{
-		i += start_index;
 		
-		popRangeBuffer(i, &realRangeBuffer[id*PADRANGESIZE]);	
+		//std::cout << "(thread " << id << ") Processing Range Line: " << i << std::endl;
 		
+		popRangeBuffer(i, &realRangeBuffer[id*PADRANGESIZE]);		
 		fftw_execute(rangePlan);	
 		
 		//complex multiplication
 		for (int j = 0; j < (PADRANGESIZE/2 + 1); j++)
 		{			
-			j += id*(PADRANGESIZE/2 + 1);
+			int k = j + id*(PADRANGESIZE);
+			int l = j + id*(PADRANGESIZE/2 +1);
 			
-			hilbertBuffer[j][0] = (fftRangeBuffer[j][0]*fftRefBuffer[j][0] - fftRangeBuffer[j][1]*fftRefBuffer[j][1]);
-			hilbertBuffer[j][1] = (fftRangeBuffer[j][0]*fftRefBuffer[j][1] + fftRangeBuffer[j][1]*fftRefBuffer[j][0]);
+			hilbertBuffer[k][0] = fftRangeBuffer[l][0]*fftRefBuffer[j][0] - fftRangeBuffer[l][1]*fftRefBuffer[j][1];
+			hilbertBuffer[k][1] = fftRangeBuffer[l][0]*fftRefBuffer[j][1] + fftRangeBuffer[l][1]*fftRefBuffer[j][0];
 		}	
 		
+		fftw_execute(resultPlan);	
+		
 		/*FILE *pipe_gp = popen("gnuplot", "w");	
-		fputs("set terminal postscript eps enhanced color font 'Helvetica,20' linewidth 2\n", pipe_gp);
-		fputs("set title 'Raw Plot'\n", pipe_gp);	
+		fputs("set terminal postscript eps enhanced color font 'Helvetica,20' linewidth 2\n", pipe_gp);		
+		std::stringstream ss;
+		ss << "set title 'Thread " << id << "'\n";		
+		fputs(ss.str().c_str(), pipe_gp);	
 		fputs("set output 'output.eps' \n", pipe_gp);
 		fputs("plot '-' using 1:2 with lines notitle\n", pipe_gp);
-		for (int j = 0; j < PADRANGESIZE/2 + 1; j++) 
+		for (int j = 0; j < PADRANGESIZE; j++) 
 		{
-			//fprintf(pipe_gp, "%i %f\n", j, (realRangeBuffer[j + id*PADRANGESIZE]));
-			fprintf(pipe_gp, "%i %f\n", j, (sqrt(hilbertBuffer[j  + id*PADRANGESIZE][0]*hilbertBuffer[j  + id*PADRANGESIZE][0] + hilbertBuffer[j  + id*PADRANGESIZE][1]*hilbertBuffer[j  + id*PADRANGESIZE][1]))); 
+			fprintf(pipe_gp, "%i %f\n", j, (realRangeBuffer[j + id*PADRANGESIZE]));
+			//fprintf(pipe_gp, "%i %f\n", j, (sqrt(fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][0]*fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][0] + fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][1]*fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][1]))); 
+			//fprintf(pipe_gp, "%i %f\n", j, (sqrt(hilbertBuffer[j  + id*(PADRANGESIZE)][0]*hilbertBuffer[j  + id*(PADRANGESIZE)][0] + hilbertBuffer[j  + id*(PADRANGESIZE)][1]*hilbertBuffer[j  + id*(PADRANGESIZE)][1]))); 
 		}
 		fputs("e\n", pipe_gp);
 		pclose(pipe_gp);*/
-		
-		fftw_execute(resultPlan);	
 		
 		updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);
 
