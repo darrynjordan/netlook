@@ -12,7 +12,6 @@
 double 		tStart, tEnd;	
 int			dopplerDataStart = 0; 
 int			dopplerThresholdSlider = 0;
-int 		processingDelay = 0;
 bool 		doppOn = false;
 bool 		suggestOn = false;
 
@@ -26,7 +25,7 @@ int UPDATELINE 			= 10000;
 int RANGESIZE 			= 2048;
 int RANGELINES 			= 130000;
 int FFTW_THREADS		= 1;
-int THREADS				= 1;
+int THREADS				= 2;
 
 int RANGELINESPERTHREAD = RANGELINES/THREADS;
 
@@ -36,19 +35,18 @@ int RANGELINESPERTHREAD = RANGELINES/THREADS;
 
 uint16_t *realDataBuffer      = (uint16_t*)malloc(RANGELINES*RANGESIZE*sizeof(uint16_t));
 
-double   *realRangeBuffer 	  = (double*)malloc(PADRANGESIZE*sizeof(double));
-double   *realRefBuffer       = (double*)malloc(PADRANGESIZE*sizeof(double));
+double   *realRangeBuffer 	  = (double*)malloc(THREADS*PADRANGESIZE*sizeof(double));
+double   *realRefBuffer       = (double*)malloc(THREADS*PADRANGESIZE*sizeof(double));
 
-uint8_t  *matchedImageBuffer  = (uint8_t*)malloc(PADRANGESIZE*sizeof(uint8_t));
-uint8_t  *dopplerImageBuffer  = (uint8_t*)malloc(DOPPLERSIZE*sizeof(uint8_t));
+uint8_t  *dopplerImageBuffer  = (uint8_t*)malloc(THREADS*DOPPLERSIZE*sizeof(uint8_t));
 
-fftw_complex *fftRangeBuffer  = (fftw_complex*)malloc((PADRANGESIZE/2 + 1)*sizeof(fftw_complex));
-fftw_complex *fftRefBuffer    = (fftw_complex*)malloc((PADRANGESIZE/2 + 1)*sizeof(fftw_complex)); 
+fftw_complex *fftRangeBuffer  = (fftw_complex*)malloc(THREADS*(PADRANGESIZE/2 + 1)*sizeof(fftw_complex));
+fftw_complex *fftRefBuffer    = (fftw_complex*)malloc(THREADS*(PADRANGESIZE/2 + 1)*sizeof(fftw_complex)); 
 
-fftw_complex *hilbertBuffer   = (fftw_complex*)malloc((PADRANGESIZE)*sizeof(fftw_complex));
-fftw_complex *dopplerBuffer   = (fftw_complex*)malloc((DOPPLERSIZE)*sizeof(fftw_complex));
+fftw_complex *hilbertBuffer   = (fftw_complex*)malloc(THREADS*PADRANGESIZE*sizeof(fftw_complex));
+fftw_complex *dopplerBuffer   = (fftw_complex*)malloc(THREADS*DOPPLERSIZE*sizeof(fftw_complex));
 
-fftw_complex *dopplerData     = (fftw_complex*)malloc((PADRANGESIZE*DOPPLERSIZE)*sizeof(fftw_complex));
+//fftw_complex *dopplerData     = (fftw_complex*)malloc((PADRANGESIZE*DOPPLERSIZE)*sizeof(fftw_complex));
 
 float *refWindow			  = (float*)malloc(REFSIZE*sizeof(float));
 float *doppWindow			  = (float*)malloc(DOPPLERSIZE*sizeof(float));
@@ -58,8 +56,6 @@ float *doppWindow			  = (float*)malloc(DOPPLERSIZE*sizeof(float));
 //=====================================================================================================
 
 fftw_plan refPlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuffer, FFTW_ESTIMATE);
-fftw_plan rangePlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRangeBuffer, fftRangeBuffer, FFTW_MEASURE);
-fftw_plan resultPlan  = fftw_plan_dft_c2r_1d(PADRANGESIZE, hilbertBuffer, realRangeBuffer, FFTW_MEASURE | FFTW_PRESERVE_INPUT);
 fftw_plan hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, FFTW_MEASURE);
 fftw_plan dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, dopplerBuffer, dopplerBuffer, FFTW_FORWARD, FFTW_MEASURE);	
 
@@ -69,10 +65,11 @@ int main(int argc, char *argv[])
 	boost::thread threads[THREADS];		
 	
 	initTerminal();	
-	startTime();
+	startTime();	
 
 	fftw_init_threads();
 	fftw_plan_with_nthreads(FFTW_THREADS);
+	fftw_make_planner_thread_safe();
 
 	popLookUpTables();
 	initOpenCV();	
@@ -85,7 +82,7 @@ int main(int argc, char *argv[])
 	
 	for (int i = 0; i < THREADS; i++)
 	{
-		threadGroup.create_thread(boost::bind(&perThread, i, i*RANGELINESPERTHREAD));
+		threadGroup.create_thread(boost::bind(&perThread, i));
 	}
 	
 	threadGroup.join_all();		
@@ -97,28 +94,59 @@ int main(int argc, char *argv[])
 }
 
 
-void perThread(int id, int start_index)
+void perThread(int id)
 {
-	std::cout << "Thread: " << id << ", Index: " << start_index << std::endl;	
+	int start_index = id*RANGELINESPERTHREAD;
 	
-	for (int i = start_index; i < start_index + RANGELINESPERTHREAD; i++)
+	fftw_plan rangePlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, &realRangeBuffer[id*PADRANGESIZE], &fftRangeBuffer[id*(PADRANGESIZE/2 + 1)], FFTW_MEASURE);
+	fftw_plan resultPlan = fftw_plan_dft_c2r_1d(PADRANGESIZE, &hilbertBuffer[id*PADRANGESIZE], &realRangeBuffer[id*PADRANGESIZE], FFTW_MEASURE | FFTW_PRESERVE_INPUT);
+	
+	std::cout << "Thread: " << id << ", Index: " << start_index << std::endl;
+	
+	for (int i = 0; i < RANGELINESPERTHREAD; i++)
 	{
-		popRangeBuffer(i, realRangeBuffer);	
-		fftw_execute(rangePlan);		
-		complxMulti();			
-		ifftMatchedData();								
-		postProcessMatched();
-		updateWaterfall(i, realRangeBuffer);
+		i += start_index;
+		
+		popRangeBuffer(i, &realRangeBuffer[id*PADRANGESIZE]);	
+		
+		fftw_execute(rangePlan);	
+		
+		//complex multiplication
+		for (int j = 0; j < (PADRANGESIZE/2 + 1); j++)
+		{			
+			j += id*(PADRANGESIZE/2 + 1);
+			
+			hilbertBuffer[j][0] = (fftRangeBuffer[j][0]*fftRefBuffer[j][0] - fftRangeBuffer[j][1]*fftRefBuffer[j][1]);
+			hilbertBuffer[j][1] = (fftRangeBuffer[j][0]*fftRefBuffer[j][1] + fftRangeBuffer[j][1]*fftRefBuffer[j][0]);
+		}	
+		
+		/*FILE *pipe_gp = popen("gnuplot", "w");	
+		fputs("set terminal postscript eps enhanced color font 'Helvetica,20' linewidth 2\n", pipe_gp);
+		fputs("set title 'Raw Plot'\n", pipe_gp);	
+		fputs("set output 'output.eps' \n", pipe_gp);
+		fputs("plot '-' using 1:2 with lines notitle\n", pipe_gp);
+		for (int j = 0; j < PADRANGESIZE/2 + 1; j++) 
+		{
+			//fprintf(pipe_gp, "%i %f\n", j, (realRangeBuffer[j + id*PADRANGESIZE]));
+			fprintf(pipe_gp, "%i %f\n", j, (sqrt(hilbertBuffer[j  + id*PADRANGESIZE][0]*hilbertBuffer[j  + id*PADRANGESIZE][0] + hilbertBuffer[j  + id*PADRANGESIZE][1]*hilbertBuffer[j  + id*PADRANGESIZE][1]))); 
+		}
+		fputs("e\n", pipe_gp);
+		pclose(pipe_gp);*/
+		
+		fftw_execute(resultPlan);	
+		
+		updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);
 
-		if (doppOn)
+		/*if (doppOn)
 		{
 			hilbertTransform();		//unnecessary cycles			
 			popDopplerData(i); 		
 			processDoppler(i);		
-		}					
-	}
+		}	*/				
+	}	
 	
-	free(realRangeBuffer);
+	fftw_destroy_plan(rangePlan);
+	fftw_destroy_plan(resultPlan);	
 	
 	timePerLine();
 }
@@ -141,7 +169,7 @@ void processDoppler(int rangeLine)
 
 void popDopplerData(int rangeLine)
 {
-	if (rangeLine%UPDATELINE == 0)
+	/*if (rangeLine%UPDATELINE == 0)
 		dopplerDataStart = rangeLine;
 
 	if ((rangeLine + 1 - dopplerDataStart) <= DOPPLERSIZE)
@@ -151,33 +179,18 @@ void popDopplerData(int rangeLine)
 			dopplerData[j*DOPPLERSIZE + (rangeLine - dopplerDataStart)][0] = hilbertBuffer[j][0];
 			dopplerData[j*DOPPLERSIZE + (rangeLine - dopplerDataStart)][1] = hilbertBuffer[j][1];
 		}
-	}
+	}*/
 }
 
 void popDopplerBuffer(int dopplerLine)
 {
-	for (int j = 0; j < DOPPLERSIZE; j++)
+	/*for (int j = 0; j < DOPPLERSIZE; j++)
 	{	
 		dopplerBuffer[j][0] = dopplerData[dopplerLine*DOPPLERSIZE + j][0]*doppWindow[j]; 
 		dopplerBuffer[j][1] = dopplerData[dopplerLine*DOPPLERSIZE + j][1]*doppWindow[j];
-	}
+	}*/
 }
 
-void postProcessMatched(void)
-{
-	/*float maxResult = 0.0f;
-
-	for (int j = 0; j < PADRANGESIZE; j++)
-	{
-		realRangeBuffer[j] = (abs(realRangeBuffer[j]));  //Largest Bottleneck -> Removed Log
-
-		if (realRangeBuffer[j] > maxResult)
-			maxResult = realRangeBuffer[j];
-	}
-
-	for (int j = 0; j < PADRANGESIZE; j++)
-		matchedImageBuffer[j] = (uint8_t)((realRangeBuffer[j]/maxResult)*255);*/	
-}
 
 void postProcessDoppler(void)
 {
@@ -212,15 +225,6 @@ void complxConjRef(void)
 	for (int i = 0; i < (PADRANGESIZE/2 + 1); i++)
 		fftRefBuffer[i][1] = -1*fftRefBuffer[i][1];
 	printMsg("Complex Conjugate Reference");
-}
-
-void complxMulti(void)
-{
-	for (int j = 0; j < (PADRANGESIZE/2 + 1); j++)
-	{			
-		hilbertBuffer[j][0] = (fftRangeBuffer[j][0]*fftRefBuffer[j][0] - fftRangeBuffer[j][1]*fftRefBuffer[j][1]);
-		hilbertBuffer[j][1] = (fftRangeBuffer[j][0]*fftRefBuffer[j][1] + fftRangeBuffer[j][1]*fftRefBuffer[j][0]);
-	}
 }
 
 void popRangeBuffer(int rangeLine, double* realRangeBuffer)
@@ -310,17 +314,17 @@ float getNormFactor(void)
 
 void freeMem(void)
 {
-	fftw_free(fftRangeBuffer);
 	fftw_free(fftRefBuffer);
 	fftw_free(hilbertBuffer);
-	fftw_free(dopplerBuffer);
-	fftw_free(dopplerData);
+	fftw_free(fftRangeBuffer);
+	//fftw_free(dopplerBuffer);
+	//fftw_free(dopplerData);
 
 	free(realDataBuffer);	
 	free(realRefBuffer);
+	free(realRangeBuffer);	
 	
-	fftw_destroy_plan(rangePlan);		
-	fftw_destroy_plan(resultPlan);	
+	
 	fftw_destroy_plan(hilbertPlan);	
 	fftw_destroy_plan(dopplerPlan);
 	fftw_destroy_plan(refPlan);

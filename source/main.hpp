@@ -35,8 +35,8 @@ void popRangeBuffer(int rangeLine, double* realRangeBuffer);
 void popDopplerData(int rangeLine);
 void popDopplerBuffer(int dopplerLine);
 void complxConjRef(void);
-void complxMulti(void);
-void perThread(int id, int start_index);
+
+void perThread(int id);
 void freeMem(void);
 void timePerLine(void);
 

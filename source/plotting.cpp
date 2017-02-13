@@ -1,7 +1,8 @@
 #include "plotting.hpp"
 
 //globals
-cv::Mat waterImage, doppImage;
+cv::Mat waterImage;
+cv::Mat doppImage;
 cv::Mat resizedWaterImage, resizedDoppImage;
 cv::Size waterSize(500, 500);
 cv::Size doppSize(250, 500);
@@ -37,9 +38,12 @@ void updateWaterfall(int rangeLine, double *imageValues)
 	cv::Mat matchedRow = cv::Mat(1, PADRANGESIZE, CV_64F, imageValues);
 	
 	cv::abs(matchedRow);	
-
+	
 	waterImage.push_back(matchedRow);
 	
+	//plotWaterfall();
+	//cv::waitKey(0);	
+
 	if (((rangeLine%(UPDATELINE-1) == 0) || rangeLine == (RANGELINES-1)) && rangeLine != 0)
 	{
 		plotWaterfall();
@@ -107,7 +111,7 @@ void GNUplot(void)
 
 
 	for (int i = 0; i < 64; i++) 
-		fprintf(pipe_gp, "%i %f\n", i, (timePlot[i]));
+		fprintf(pipe_gp, "%i %f\n", i, (realRangeBuffer[i]));
 		//fprintf(pipe_gp, "%i %f\n", i, (sqrt(dopplerBuffer[i][0]*dopplerBuffer[i][0] + dopplerBuffer[i][1]*dopplerBuffer[i][1]))); 
 
 	fputs("e\n", pipe_gp);
