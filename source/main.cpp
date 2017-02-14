@@ -2,35 +2,29 @@
 //	written by: Darryn Jordan
 // 	email: jrddar001@myuct.ac.za
 
-
 #include "main.hpp"
 
 //=====================================================================================================
 // Global Variables
 //=====================================================================================================
+int	dopplerDataStart = 0; 
 
-int		dopplerDataStart = 0; 
+bool isDoppler = false;
+bool isSuggestions = false;
+bool isVisualiser = false;
 
-bool 	isDoppler = false;
-bool 	isSuggestions = false;
-bool	isVisualiser = false;
-bool 	isZeroPad = false;		//%TODO implement this flag
-
-
-//%TODO move data import into a function
-radarData netrad(D2);
-
-int REFSIZE 			= netrad.getRefSigSize();
-int PADRANGESIZE 		= netrad.getPaddedSize();
-
-int DOPPLERSIZE 		= 64;
-int UPDATELINE 			= 13000;
-int RANGESIZE 			= 2048;
-int RANGELINES 			= 130000;
-int FFTW_THREADS		= 1;
-int THREADS				= 1;
-
+int DATASETID = 0;
+int REFSIZE = 100;
+int PADRANGESIZE = 2048;
+int DOPPLERSIZE = 32;
+int UPDATELINE = 1000;
+int RANGESIZE = 2048;
+int RANGELINES = 130000;
+int FFTW_THREADS = 1;
+int THREADS = 1;
 int RANGELINESPERTHREAD = RANGELINES/THREADS;
+
+dataset Dataset;
 
 //=====================================================================================================
 // Allocate Memory
@@ -64,10 +58,23 @@ boost::mutex mutex;
 int main(int argc, char *argv[])
 {
 	int opt;	
-	while ((opt = getopt(argc, argv, "vt:c:")) != -1 ) 
+	while ((opt = getopt(argc, argv, "u:l:p:d:vt:c:")) != -1) 
     {
         switch (opt) 
         {
+            case 'd':
+				DATASETID = atoi(optarg);				
+				break;
+			case 'p':
+				PADRANGESIZE = atoi(optarg);
+				break;
+			case 'u':
+				UPDATELINE = atoi(optarg);
+				break;
+			case 'l':
+				RANGELINES = atoi(optarg);
+				RANGELINESPERTHREAD = RANGELINES/THREADS;
+				break;
             case 'v':
                 isVisualiser = true;
                 break;
@@ -84,8 +91,11 @@ int main(int argc, char *argv[])
 				else
 				fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);				
         }
-    }
+    }    
     
+    Dataset.setID(DATASETID);					
+	REFSIZE = Dataset.getRefSigSize();    
+
     initTerminal();	
     allocateMemory();
     initMat();	
@@ -292,7 +302,7 @@ void loadRangeData(void)
 	FILE *dataBinFile_p;	
 	
 	//open binary file
-	dataBinFile_p = fopen(netrad.getDataSetName(), "r");
+	dataBinFile_p = fopen(Dataset.getDataSetName(), "r");
 
 	//read from binary files into buffers
 	fread(realDataBuffer, sizeof(uint16_t), RANGELINES*RANGESIZE, dataBinFile_p);
@@ -306,7 +316,7 @@ void loadRangeData(void)
 void loadRefData(void)
 {
 	std::vector<double> refVector;	
-	std::ifstream file(netrad.getRefSigName());
+	std::ifstream file(Dataset.getRefSigName());
     std::string line; 
 
     while (std::getline(file, line))

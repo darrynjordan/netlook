@@ -3,24 +3,21 @@
 
 #include "main.hpp"
 
-enum data {D1, D2, D3, D4, D5};
-
-class radarData
+class dataset
 {
 	private:
 		const char* dataSetName;
 		const char* refSigName;
-		int			refSigSize;
-		int			paddedSize;
-
-		void setGlobalSizes(int refSigSize, int paddedRangeSize);		
+		int	refSigSize;
+		int	paddedSize;
 
 	public:
-		radarData(int dataId);		
+		dataset(void);		
+		void setID(int id);
 		const char* getDataSetName(void){return dataSetName;}
 		const char* getRefSigName(void){return refSigName;}
-		int 		getRefSigSize(void){return refSigSize;}
-		int 		getPaddedSize(void){return paddedSize;}
+		int	getRefSigSize(void){return refSigSize;}
+		int getPaddedSize(void){return paddedSize;}
 };
 
 #endif

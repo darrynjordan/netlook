@@ -53,6 +53,14 @@ void updateWaterfall(int rangeLine, double *imageValues)
 
 void plotWaterfall(void)
 {					
+	processPlot();
+	cv::imshow("Waterfall Plot", processedImage);	
+	cv::waitKey(1);	
+}
+
+
+void processPlot(void)
+{
 	cv::resize(waterImage, resizedWaterImage, waterSize);	
 	cv::log(resizedWaterImage, resizedWaterImage);
 	cv::normalize(resizedWaterImage, resizedWaterImage, 0.0, 1.0, cv::NORM_MINMAX);
@@ -64,11 +72,8 @@ void plotWaterfall(void)
 	cv::applyColorMap(processedImage, processedImage, waterfallColourMapSlider);	
 	cv::transpose(processedImage, processedImage);
 	cv::flip(processedImage, processedImage, 0);
-
-	cv::imshow("Waterfall Plot", processedImage);
-	
-	cv::waitKey(1);	
 }
+
 
 void updateDoppler(uint8_t  *imageValues)
 {
@@ -92,18 +97,7 @@ void plotDoppler(void)
 
 void savePlots(void)
 {
-	cv::resize(waterImage, resizedWaterImage, waterSize);	
-	cv::log(resizedWaterImage, resizedWaterImage);
-	cv::normalize(resizedWaterImage, resizedWaterImage, 0.0, 1.0, cv::NORM_MINMAX);
-
-	resizedWaterImage.convertTo(processedImage, CV_8U, 255);	
-	
-	cv::equalizeHist(processedImage, processedImage);
-
-	cv::applyColorMap(processedImage, processedImage, waterfallColourMapSlider);	
-	cv::transpose(processedImage, processedImage);
-	cv::flip(processedImage, processedImage, 0);
-	
+	processPlot();	
 	cv::imwrite("../results/waterfall_plot.jpg", processedImage);
 	if (isDoppler) cv::imwrite("../results/doppler_plot.jpg", resizedDoppImage);
 }

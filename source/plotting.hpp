@@ -12,6 +12,7 @@ void plotDoppler(void);
 void updateWaterfall(int rangeLine, double *imageValues);
 void updateDoppler(uint8_t  *imageValues);
 void initPlots(void);
+void processPlot(void);
 void initMat(void);
 void savePlots(void);
 void saveData(void);

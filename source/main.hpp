@@ -36,17 +36,13 @@ void popRangeBuffer(int rangeLine, double* realRangeBuffer);
 void popDopplerData(int rangeLine);
 void popDopplerBuffer(int dopplerLine);
 void complxConjRef(void);
-
+void getParameters(void);
 void perThread(int id);
 void freeMem(void);
-
-
 void postProcessMatched(void);
 void postProcessDoppler(void);
-
 void normRefData(void);
 void processDoppler(int rangeLine);
-
 float getNormFactor(void);
 uint16_t getRangeOffset(void);
 
@@ -59,22 +55,21 @@ extern fftw_complex *fftRefBuffer;
 extern fftw_complex *hilbertBuffer;
 extern fftw_complex *dopplerBuffer;
 extern fftw_complex *dopplerData;
-
 extern float		*refWindow;
 extern float		*doppWindow;
 
-extern bool 		isDoppler;
-extern bool 		isSuggestions;
-extern int			dopplerThresholdSlider;
+extern bool isDoppler;
+extern bool isSuggestions;
+extern int dopplerThresholdSlider;
 
-extern int 			REFSIZE;
-extern int 			PADRANGESIZE;
-extern int 			RANGELINES;
-extern int 			RANGESIZE;
-extern int 			DOPPLERSIZE;
-extern int 			UPDATELINE;
-extern int 			FFTW_THREADS;
-extern int 			THREADS;
-extern int 			RANGELINESPERTHREAD;
+extern int REFSIZE;
+extern int PADRANGESIZE;
+extern int RANGELINES;
+extern int RANGESIZE;
+extern int DOPPLERSIZE;
+extern int UPDATELINE;
+extern int FFTW_THREADS;
+extern int THREADS;
+extern int RANGELINESPERTHREAD;
 
 #endif
