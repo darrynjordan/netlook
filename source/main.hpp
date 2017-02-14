@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <cstdio>
+#include <unistd.h>
 #include <boost/thread.hpp>
 
 #include <iostream>

@@ -14,6 +14,7 @@ int		dopplerDataStart = 0;
 int		dopplerThresholdSlider = 0;
 bool 	doppOn = false;
 bool 	suggestOn = false;
+bool	visualiserOn = false;
 
 radarData netrad(D2);
 
@@ -63,6 +64,26 @@ boost::mutex mutex;
 
 int main(int argc, char *argv[])
 {
+	int opt;
+	
+	while ((opt = getopt(argc, argv, "vt:")) != -1 ) 
+    {
+        switch (opt) 
+        {
+            case 'v':
+                visualiserOn = true;
+                break;
+            case 't':
+                //THREADS = atoi(optarg); %todo
+                break;			
+            case '?':
+				if (optopt == 't')
+					fprintf (stderr, "Option -%c requires an argument.\n", optopt);		
+				else
+				fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);				
+        }
+    }
+	
 	boost::thread_group threadGroup;
 	boost::thread threads[THREADS];		
 	
@@ -74,7 +95,9 @@ int main(int argc, char *argv[])
 	fftw_make_planner_thread_safe();
 
 	popLookUpTables();
-	//initOpenCV();	
+	
+	if (visualiserOn) initOpenCV();	
+
 	loadRefData();		
 	normRefData();	
 	fftw_execute(refPlan);	
@@ -89,7 +112,7 @@ int main(int argc, char *argv[])
 	
 	threadGroup.join_all();		
 	
-	//plotWaterfall();
+	if (visualiserOn) plotWaterfall();
 	
 	freeMem();
 	cv::waitKey(0);
@@ -120,15 +143,17 @@ void perThread(int id)
 			hilbertBuffer[k][1] = fftRangeBuffer[l][0]*fftRefBuffer[j][1] + fftRangeBuffer[l][1]*fftRefBuffer[j][0];
 		}	
 		
-		fftw_execute(resultPlan);	
+		fftw_execute(resultPlan);		
 		
-		/*updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);
-		
-		if (i%UPDATELINE == 0)
+		if (visualiserOn) 
 		{
-			plotWaterfall();
-		}*/
-		
+			updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);
+			
+			if (i%UPDATELINE == 0)
+			{
+				plotWaterfall();
+			}
+		}	
 
 		/*if (doppOn)
 		{
