@@ -13,4 +13,6 @@ void updateDoppler(uint8_t  *imageValues);
 void initOpenCV(void);
 void GNUplot(void);
 
+extern int waterfallColourMapSlider;
+
 #endif

@@ -26,7 +26,7 @@ int UPDATELINE 			= 13000;
 int RANGESIZE 			= 2048;
 int RANGELINES 			= 130000;
 int FFTW_THREADS		= 1;
-int THREADS				= 4;
+int THREADS				= 1;
 
 int RANGELINESPERTHREAD = RANGELINES/THREADS;
 
@@ -34,39 +34,36 @@ int RANGELINESPERTHREAD = RANGELINES/THREADS;
 // Allocate Memory
 //=====================================================================================================
 
-uint16_t *realDataBuffer      = (uint16_t*)malloc(RANGELINES*RANGESIZE*sizeof(uint16_t));
+uint16_t *realDataBuffer;
+double   *realRangeBuffer;
+double   *realRefBuffer;
+uint8_t  *dopplerImageBuffer;
 
-double   *realRangeBuffer 	  = (double*)malloc(THREADS*PADRANGESIZE*sizeof(double));
-double   *realRefBuffer       = (double*)malloc(THREADS*PADRANGESIZE*sizeof(double));
+fftw_complex *fftRangeBuffer;
+fftw_complex *fftRefBuffer; 
+fftw_complex *hilbertBuffer;
+fftw_complex *dopplerBuffer;
 
-uint8_t  *dopplerImageBuffer  = (uint8_t*)malloc(THREADS*DOPPLERSIZE*sizeof(uint8_t));
+//fftw_complex *dopplerData;
 
-fftw_complex *fftRangeBuffer  = (fftw_complex*)malloc(THREADS*(PADRANGESIZE/2 + 1)*sizeof(fftw_complex));
-fftw_complex *fftRefBuffer    = (fftw_complex*)malloc(THREADS*(PADRANGESIZE/2 + 1)*sizeof(fftw_complex)); 
-
-fftw_complex *hilbertBuffer   = (fftw_complex*)malloc(THREADS*PADRANGESIZE*sizeof(fftw_complex));
-fftw_complex *dopplerBuffer   = (fftw_complex*)malloc(THREADS*DOPPLERSIZE*sizeof(fftw_complex));
-
-//fftw_complex *dopplerData     = (fftw_complex*)malloc((PADRANGESIZE*DOPPLERSIZE)*sizeof(fftw_complex));
-
-float *refWindow			  = (float*)malloc(REFSIZE*sizeof(float));
-float *doppWindow			  = (float*)malloc(DOPPLERSIZE*sizeof(float));
+float *refWindow;
+float *doppWindow;
 
 //=====================================================================================================
 // Setup FFTW Plans
 //=====================================================================================================
 
-fftw_plan refPlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuffer, FFTW_ESTIMATE);
-fftw_plan hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, FFTW_MEASURE);
-fftw_plan dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, dopplerBuffer, dopplerBuffer, FFTW_FORWARD, FFTW_MEASURE);	
-
-boost::mutex mutex;
+fftw_plan refPlan;
+fftw_plan hilbertPlan;
+fftw_plan dopplerPlan;	
 
 int main(int argc, char *argv[])
 {
+	std::cout << "test" << std::endl;
+	
 	int opt;
 	
-	while ((opt = getopt(argc, argv, "vt:")) != -1 ) 
+	while ((opt = getopt(argc, argv, "vt:c:")) != -1 ) 
     {
         switch (opt) 
         {
@@ -74,8 +71,12 @@ int main(int argc, char *argv[])
                 visualiserOn = true;
                 break;
             case 't':
-                //THREADS = atoi(optarg); %todo
-                break;			
+				THREADS = atoi(optarg);
+				RANGELINESPERTHREAD = RANGELINES/THREADS;
+				break;	
+			case 'c':
+				waterfallColourMapSlider = atoi(optarg);
+				break;				
             case '?':
 				if (optopt == 't')
 					fprintf (stderr, "Option -%c requires an argument.\n", optopt);		
@@ -83,6 +84,8 @@ int main(int argc, char *argv[])
 				fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);				
         }
     }
+    
+    allocateMemory();
 	
 	boost::thread_group threadGroup;
 	boost::thread threads[THREADS];		
@@ -167,6 +170,28 @@ void perThread(int id)
 	fftw_destroy_plan(resultPlan);	
 	
 	std::cout << "(thread "<< id << ") Average Time per Line: "<< std::setprecision (2) << std::fixed << getTime()/RANGELINES * 1000000 << " us" << std::endl;
+}
+
+
+void allocateMemory(void)
+{
+	realDataBuffer = (uint16_t*)malloc(RANGELINES*RANGESIZE*sizeof(uint16_t));
+	realRangeBuffer 	= (double*)malloc(THREADS*PADRANGESIZE*sizeof(double));
+	realRefBuffer       = (double*)malloc(THREADS*PADRANGESIZE*sizeof(double));
+	dopplerImageBuffer  = (uint8_t*)malloc(THREADS*DOPPLERSIZE*sizeof(uint8_t));
+
+	fftRangeBuffer  = (fftw_complex*)malloc(THREADS*(PADRANGESIZE/2 + 1)*sizeof(fftw_complex));
+	fftRefBuffer    = (fftw_complex*)malloc(THREADS*(PADRANGESIZE/2 + 1)*sizeof(fftw_complex)); 
+	hilbertBuffer   = (fftw_complex*)malloc(THREADS*PADRANGESIZE*sizeof(fftw_complex));
+	dopplerBuffer   = (fftw_complex*)malloc(THREADS*DOPPLERSIZE*sizeof(fftw_complex));
+	//dopplerData     = (fftw_complex*)malloc((PADRANGESIZE*DOPPLERSIZE)*sizeof(fftw_complex));
+
+	refWindow  = (float*)malloc(REFSIZE*sizeof(float));
+	doppWindow = (float*)malloc(DOPPLERSIZE*sizeof(float));
+	
+	refPlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuffer, FFTW_ESTIMATE);
+	hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, FFTW_MEASURE);
+	dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, dopplerBuffer, dopplerBuffer, FFTW_FORWARD, FFTW_MEASURE);	
 }
 
 
