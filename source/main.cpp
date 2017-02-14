@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	fftw_make_planner_thread_safe();
 
 	popLookUpTables();
-	initOpenCV();	
+	//initOpenCV();	
 	loadRefData();		
 	normRefData();	
 	fftw_execute(refPlan);	
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 	
 	threadGroup.join_all();		
 	
-	plotWaterfall();
+	//plotWaterfall();
 	
 	freeMem();
 	cv::waitKey(0);
@@ -122,12 +122,12 @@ void perThread(int id)
 		
 		fftw_execute(resultPlan);	
 		
-		updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);
+		/*updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);
 		
 		if (i%UPDATELINE == 0)
 		{
 			plotWaterfall();
-		}
+		}*/
 		
 
 		/*if (doppOn)
