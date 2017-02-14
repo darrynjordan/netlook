@@ -9,13 +9,15 @@
 // Global Variables
 //=====================================================================================================
 
-double 	tStart, tEnd;	
 int		dopplerDataStart = 0; 
-int		dopplerThresholdSlider = 0;
-bool 	doppOn = false;
-bool 	suggestOn = false;
-bool	visualiserOn = false;
 
+bool 	isDoppler = false;
+bool 	isSuggestions = false;
+bool	isVisualiser = false;
+bool 	isZeroPad = false;		//%TODO implement this flag
+
+
+//%TODO move data import into a function
 radarData netrad(D2);
 
 int REFSIZE 			= netrad.getRefSigSize();
@@ -67,7 +69,7 @@ int main(int argc, char *argv[])
         switch (opt) 
         {
             case 'v':
-                visualiserOn = true;
+                isVisualiser = true;
                 break;
             case 't':
 				THREADS = atoi(optarg);
@@ -85,7 +87,8 @@ int main(int argc, char *argv[])
     }
     
     initTerminal();	
-    allocateMemory();	
+    allocateMemory();
+    initMat();	
     
 	boost::thread_group threadGroup;
 	boost::thread threads[THREADS];			
@@ -95,10 +98,7 @@ int main(int argc, char *argv[])
 
 	popLookUpTables();
 	
-	if (visualiserOn) 
-	{
-		initOpenCV();	
-	}
+	if (isVisualiser) initPlots();	
 	
 	loadRefData();	
 	loadRangeData();
@@ -113,15 +113,12 @@ int main(int argc, char *argv[])
 	
 	threadGroup.join_all();		
 	
-	if (visualiserOn) 
-	{
-		plotWaterfall();
-		savePlots();
-		//saveData();
-	}	
+	if (isVisualiser) plotWaterfall();	
 	
 	endTime();	
 	
+	savePlots();
+	//saveData();
 	freeMem();
 	cv::waitKey(0);
 	
@@ -151,18 +148,15 @@ void perThread(int id)
 			hilbertBuffer[k][1] = fftRangeBuffer[l][0]*fftRefBuffer[j][1] + fftRangeBuffer[l][1]*fftRefBuffer[j][0];
 		}	
 		
-		fftw_execute(resultPlan);		
+		fftw_execute(resultPlan);	
 		
-		if (visualiserOn) 
-		{			
-			updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);			
-			
-			if (i%UPDATELINE == 0)
-			{
-				mutex.lock();
-				plotWaterfall();
-				mutex.unlock();
-			}				
+		updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);	
+		
+		if (isVisualiser && (i%UPDATELINE == 0))
+		{
+			mutex.lock();
+			plotWaterfall();
+			mutex.unlock();		
 		}	
 
 		/*if (doppOn)

@@ -63,9 +63,8 @@ extern fftw_complex *dopplerData;
 extern float		*refWindow;
 extern float		*doppWindow;
 
-extern double 		tStart, tEnd;
-extern bool 		doppOn;
-extern bool 		suggestOn;
+extern bool 		isDoppler;
+extern bool 		isSuggestions;
 extern int			dopplerThresholdSlider;
 
 extern int 			REFSIZE;

@@ -16,7 +16,7 @@ class radarData
 		void setGlobalSizes(int refSigSize, int paddedRangeSize);		
 
 	public:
-					radarData(int dataId);		
+		radarData(int dataId);		
 		const char* getDataSetName(void){return dataSetName;}
 		const char* getRefSigName(void){return refSigName;}
 		int 		getRefSigSize(void){return refSigSize;}

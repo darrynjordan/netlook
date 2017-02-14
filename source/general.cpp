@@ -1,5 +1,7 @@
 #include "general.hpp"
 
+double 	tStart, tEnd;
+
 void initTerminal(void)
 {
 	system("clear\n");
@@ -7,12 +9,12 @@ void initTerminal(void)
 	printf("--------------------\n");
 	printf("\n");		
 
-	if (doppOn)
+	if (isDoppler)
 		printf("Doppler Processing:\t\tON\n");
 	else
 		printf("Doppler Processing:\t\tOFF\n");
 
-	if (suggestOn)
+	if (isSuggestions)
 	{
 		printf("\n");		
 		printf("Suggested Zero Padding Sizes:\n");

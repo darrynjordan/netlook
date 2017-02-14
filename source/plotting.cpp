@@ -11,15 +11,19 @@ cv::Size doppSize(250, 500);
 
 int waterfallColourMapSlider = 0;
 int dopplerColourMapSlider = 0;
+int	dopplerThresholdSlider = 0;
 
 const int dopplerThresholdMax = 255;
 const int colourMapMax = 11;
 
-void initOpenCV(void)
-{	
+void initMat(void)
+{
 	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
 	doppImage = cv::Mat::ones(RANGELINES, DOPPLERSIZE, CV_64F);
-	
+}
+
+void initPlots(void)
+{	
 	cv::namedWindow("Control Window", cv::WINDOW_NORMAL);
 	cv::moveWindow("Control Window", 870, 100); 	
 	
@@ -27,7 +31,7 @@ void initOpenCV(void)
 	cv::moveWindow("Waterfall Plot", 100, 100);					//trackbar is 54 units in height
 	cv::createTrackbar( "Waterfall Colour Map", "Control Window", &waterfallColourMapSlider, colourMapMax);
 
-	if (doppOn == true)
+	if (isDoppler == true)
 	{
 		cv::namedWindow("Doppler Plot");
 		cv::moveWindow("Doppler Plot", 600, 100); 
@@ -35,7 +39,7 @@ void initOpenCV(void)
 		cv::createTrackbar( "Doppler Colour Map", "Control Window", &dopplerColourMapSlider, colourMapMax);
 	}
 
-	std::cout << "Initialized OpenCV" << std::endl;
+	std::cout << "Initialized Plots" << std::endl;
 }
 
 void updateWaterfall(int rangeLine, double *imageValues)
@@ -88,8 +92,20 @@ void plotDoppler(void)
 
 void savePlots(void)
 {
+	cv::resize(waterImage, resizedWaterImage, waterSize);	
+	cv::log(resizedWaterImage, resizedWaterImage);
+	cv::normalize(resizedWaterImage, resizedWaterImage, 0.0, 1.0, cv::NORM_MINMAX);
+
+	resizedWaterImage.convertTo(processedImage, CV_8U, 255);	
+	
+	cv::equalizeHist(processedImage, processedImage);
+
+	cv::applyColorMap(processedImage, processedImage, waterfallColourMapSlider);	
+	cv::transpose(processedImage, processedImage);
+	cv::flip(processedImage, processedImage, 0);
+	
 	cv::imwrite("../results/waterfall_plot.jpg", processedImage);
-	if (doppOn) cv::imwrite("../results/doppler_plot.jpg", resizedDoppImage);
+	if (isDoppler) cv::imwrite("../results/doppler_plot.jpg", resizedDoppImage);
 }
 
 void saveData(void)

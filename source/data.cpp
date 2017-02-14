@@ -18,7 +18,7 @@ radarData::radarData(int dataId)
 			dataSetName = "../../datasets/e10_10_16_1800_40_P1_1_130000_S0_1_2047_node3.bin";
 			refSigName  = "../reference_signals/refSigN3N3Pl1000.txt";
 			refSigSize  = 100;
-			paddedSize  = 2048; //2304; -- avoid circular convolution 
+			paddedSize  = 2304;
 			break;
 		}
 
@@ -45,7 +45,7 @@ radarData::radarData(int dataId)
 			dataSetName = "../../datasets/e11_04_27_1300_13_P1_1_130000_S0_1_2047_node3.bin";
 			refSigName  = "../reference_signals/refSigN3N3Pl10000.txt";
 			refSigSize  = 1000;
-			paddedSize  = 2048; //3072; -- avoid circular convolution 
+			paddedSize  = 3072; 
 			break;
 		}
 	}		
