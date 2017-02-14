@@ -3,11 +3,12 @@
 //globals
 cv::Mat waterImage;
 cv::Mat doppImage;
-cv::Mat resizedWaterImage, resizedDoppImage;
+cv::Mat resizedWaterImage;
+cv::Mat resizedDoppImage;
 cv::Size waterSize(500, 500);
 cv::Size doppSize(250, 500);
 
-int waterfallColourMapSlider = 0;
+int waterfallColourMapSlider = 2;
 int dopplerColourMapSlider = 0;
 
 const int dopplerThresholdMax = 255;
@@ -15,6 +16,8 @@ const int colourMapMax = 11;
 
 void initOpenCV(void)
 {	
+	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
+	
 	cv::namedWindow("Control Window", cv::WINDOW_NORMAL);
 	cv::moveWindow("Control Window", 870, 100); 	
 	
@@ -39,21 +42,12 @@ void updateWaterfall(int rangeLine, double *imageValues)
 	
 	cv::abs(matchedRow);	
 	
-	waterImage.push_back(matchedRow);
-	
-	//plotWaterfall();
-	//cv::waitKey(0);	
-
-	if (((rangeLine%(UPDATELINE-1) == 0) || rangeLine == (RANGELINES-1)) && rangeLine != 0)
-	{
-		plotWaterfall();
-		//cv::waitKey(0);
-	}
+	matchedRow.copyTo(waterImage(cv::Rect(0, rangeLine, matchedRow.cols, matchedRow.rows)));
 }
 
 void plotWaterfall(void)
 {					
-	cv::resize(waterImage, resizedWaterImage, waterSize);		
+	cv::resize(waterImage, resizedWaterImage, waterSize);	
 	cv::log(resizedWaterImage, resizedWaterImage);
 	cv::normalize(resizedWaterImage, resizedWaterImage, 0.0, 1.0, cv::NORM_MINMAX);
 
@@ -115,6 +109,25 @@ void GNUplot(void)
 		fprintf(pipe_gp, "%i %f\n", i, (realRangeBuffer[i]));
 		//fprintf(pipe_gp, "%i %f\n", i, (sqrt(dopplerBuffer[i][0]*dopplerBuffer[i][0] + dopplerBuffer[i][1]*dopplerBuffer[i][1]))); 
 
+	fputs("e\n", pipe_gp);
+	pclose(pipe_gp);*/
+	
+	
+	
+	//usefull to put in main...	
+	/*FILE *pipe_gp = popen("gnuplot", "w");	
+	fputs("set terminal postscript eps enhanced color font 'Helvetica,20' linewidth 2\n", pipe_gp);		
+	std::stringstream ss;
+	ss << "set title 'Thread " << id << "'\n";		
+	fputs(ss.str().c_str(), pipe_gp);	
+	fputs("set output 'output.eps' \n", pipe_gp);
+	fputs("plot '-' using 1:2 with lines notitle\n", pipe_gp);
+	for (int j = 0; j < PADRANGESIZE; j++) 
+	{
+		fprintf(pipe_gp, "%i %f\n", j, (realRangeBuffer[j + id*PADRANGESIZE]));
+		//fprintf(pipe_gp, "%i %f\n", j, (sqrt(fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][0]*fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][0] + fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][1]*fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][1]))); 
+		//fprintf(pipe_gp, "%i %f\n", j, (sqrt(hilbertBuffer[j  + id*(PADRANGESIZE)][0]*hilbertBuffer[j  + id*(PADRANGESIZE)][0] + hilbertBuffer[j  + id*(PADRANGESIZE)][1]*hilbertBuffer[j  + id*(PADRANGESIZE)][1]))); 
+	}
 	fputs("e\n", pipe_gp);
 	pclose(pipe_gp);*/
 }

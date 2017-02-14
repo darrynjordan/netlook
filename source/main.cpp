@@ -9,13 +9,13 @@
 // Global Variables
 //=====================================================================================================
 
-double 		tStart, tEnd;	
-int			dopplerDataStart = 0; 
-int			dopplerThresholdSlider = 0;
-bool 		doppOn = false;
-bool 		suggestOn = false;
+double 	tStart, tEnd;	
+int		dopplerDataStart = 0; 
+int		dopplerThresholdSlider = 0;
+bool 	doppOn = false;
+bool 	suggestOn = false;
 
-radarData netrad(D5);
+radarData netrad(D2);
 
 int REFSIZE 			= netrad.getRefSigSize();
 int PADRANGESIZE 		= netrad.getPaddedSize();
@@ -25,7 +25,7 @@ int UPDATELINE 			= 13000;
 int RANGESIZE 			= 2048;
 int RANGELINES 			= 130000;
 int FFTW_THREADS		= 1;
-int THREADS				= 2;
+int THREADS				= 4;
 
 int RANGELINESPERTHREAD = RANGELINES/THREADS;
 
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 	loadRefData();		
 	normRefData();	
 	fftw_execute(refPlan);	
-	complxConjRef();		
+	complxConjRef();	
 	
 	loadRangeData();
 	
@@ -88,6 +88,8 @@ int main(int argc, char *argv[])
 	}
 	
 	threadGroup.join_all();		
+	
+	plotWaterfall();
 	
 	freeMem();
 	cv::waitKey(0);
@@ -104,10 +106,7 @@ void perThread(int id)
 	fftw_plan resultPlan = fftw_plan_dft_c2r_1d(PADRANGESIZE, &hilbertBuffer[id*PADRANGESIZE], &realRangeBuffer[id*PADRANGESIZE], FFTW_MEASURE | FFTW_PRESERVE_INPUT);
 	
 	for (int i = start_index; i < start_index + RANGELINESPERTHREAD; i++)
-	{
-		
-		//std::cout << "(thread " << id << ") Processing Range Line: " << i << std::endl;
-		
+	{		
 		popRangeBuffer(i, &realRangeBuffer[id*PADRANGESIZE]);		
 		fftw_execute(rangePlan);	
 		
@@ -123,25 +122,13 @@ void perThread(int id)
 		
 		fftw_execute(resultPlan);	
 		
-		/*FILE *pipe_gp = popen("gnuplot", "w");	
-		fputs("set terminal postscript eps enhanced color font 'Helvetica,20' linewidth 2\n", pipe_gp);		
-		std::stringstream ss;
-		ss << "set title 'Thread " << id << "'\n";		
-		fputs(ss.str().c_str(), pipe_gp);	
-		fputs("set output 'output.eps' \n", pipe_gp);
-		fputs("plot '-' using 1:2 with lines notitle\n", pipe_gp);
-		for (int j = 0; j < PADRANGESIZE; j++) 
-		{
-			fprintf(pipe_gp, "%i %f\n", j, (realRangeBuffer[j + id*PADRANGESIZE]));
-			//fprintf(pipe_gp, "%i %f\n", j, (sqrt(fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][0]*fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][0] + fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][1]*fftRangeBuffer[j  + id*(PADRANGESIZE/2 + 1)][1]))); 
-			//fprintf(pipe_gp, "%i %f\n", j, (sqrt(hilbertBuffer[j  + id*(PADRANGESIZE)][0]*hilbertBuffer[j  + id*(PADRANGESIZE)][0] + hilbertBuffer[j  + id*(PADRANGESIZE)][1]*hilbertBuffer[j  + id*(PADRANGESIZE)][1]))); 
-		}
-		fputs("e\n", pipe_gp);
-		pclose(pipe_gp);*/
-		
-		mutex.lock();
 		updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);
-		mutex.unlock();
+		
+		if (i%UPDATELINE == 0)
+		{
+			plotWaterfall();
+		}
+		
 
 		/*if (doppOn)
 		{
@@ -328,8 +315,7 @@ void freeMem(void)
 
 	free(realDataBuffer);	
 	free(realRefBuffer);
-	free(realRangeBuffer);	
-	
+	free(realRangeBuffer);		
 	
 	fftw_destroy_plan(hilbertPlan);	
 	fftw_destroy_plan(dopplerPlan);
