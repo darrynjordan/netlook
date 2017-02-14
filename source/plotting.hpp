@@ -11,6 +11,7 @@ void plotDoppler(void);
 void updateWaterfall(int rangeLine, double *imageValues);
 void updateDoppler(uint8_t  *imageValues);
 void initOpenCV(void);
+void savePlots(void);
 void GNUplot(void);
 
 extern int waterfallColourMapSlider;

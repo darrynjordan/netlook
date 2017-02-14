@@ -3,6 +3,7 @@
 //globals
 cv::Mat waterImage;
 cv::Mat doppImage;
+cv::Mat processedImage;	
 cv::Mat resizedWaterImage;
 cv::Mat resizedDoppImage;
 cv::Size waterSize(500, 500);
@@ -17,6 +18,7 @@ const int colourMapMax = 11;
 void initOpenCV(void)
 {	
 	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
+	doppImage = cv::Mat::ones(RANGELINES, DOPPLERSIZE, CV_64F);
 	
 	cv::namedWindow("Control Window", cv::WINDOW_NORMAL);
 	cv::moveWindow("Control Window", 870, 100); 	
@@ -51,7 +53,6 @@ void plotWaterfall(void)
 	cv::log(resizedWaterImage, resizedWaterImage);
 	cv::normalize(resizedWaterImage, resizedWaterImage, 0.0, 1.0, cv::NORM_MINMAX);
 
-	cv::Mat processedImage;	
 	resizedWaterImage.convertTo(processedImage, CV_8U, 255);	
 	
 	cv::equalizeHist(processedImage, processedImage);
@@ -61,9 +62,9 @@ void plotWaterfall(void)
 	cv::flip(processedImage, processedImage, 0);
 
 	cv::imshow("Waterfall Plot", processedImage);
-	//cv::imwrite("waterfall_plot.png", resizedWaterImage);
+	
 	cv::waitKey(1);	
-	processedImage.release();
+	//processedImage.release();
 	//waterImage.release();
 }
 
@@ -81,10 +82,16 @@ void plotDoppler(void)
 	cv::flip(resizedDoppImage, resizedDoppImage, 0);
 
 	cv::imshow("Doppler Plot", resizedDoppImage);
-	//cv::imwrite("doppler_plot.png", resizedDoppImage);
+	
 	cv::waitKey(1);
 	resizedDoppImage.release();	
 	doppImage.release();
+}
+
+void savePlots(void)
+{
+	cv::imwrite("../results/waterfall_plot.jpg", processedImage);
+	if (doppOn) cv::imwrite("../results/doppler_plot.jpg", resizedDoppImage);
 }
 
 void GNUplot(void)

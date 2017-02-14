@@ -99,7 +99,10 @@ int main(int argc, char *argv[])
 
 	popLookUpTables();
 	
-	if (visualiserOn) initOpenCV();	
+	if (visualiserOn) 
+	{
+		initOpenCV();	
+	}
 
 	loadRefData();		
 	normRefData();	
@@ -115,7 +118,12 @@ int main(int argc, char *argv[])
 	
 	threadGroup.join_all();		
 	
-	if (visualiserOn) plotWaterfall();
+	if (visualiserOn) 
+	{
+		plotWaterfall();
+		savePlots();
+	}
+	
 	
 	freeMem();
 	cv::waitKey(0);
