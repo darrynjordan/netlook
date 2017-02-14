@@ -44,9 +44,15 @@ float getTime(void)
 
 void startTime(void)
 {
+	std::cout << "Starting Timer...\n" << std::endl;
 	struct timeval time;
     gettimeofday(&time,NULL);
-	tStart = (double)time.tv_sec + (double)time.tv_usec * .000001;
+	tStart = (double)time.tv_sec + (double)time.tv_usec * .000001;	
+}
+
+void endTime(void)
+{
+	std::cout << "Completed Processing in " << std::setprecision (2) << std::fixed << getTime() << "s\n" << std::endl;	
 }
 
 void printMsg(std::string msg)
@@ -74,6 +80,7 @@ void  popLookUpTables(void)
 	{
 		doppWindow[i] = getWindowFactor(i, DOPPLERSIZE, HANNING);
 	}
+	std::cout << "Calculated Window Values" << std::endl;
 }
 
 void primeSolver(void)

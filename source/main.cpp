@@ -57,12 +57,11 @@ fftw_plan refPlan;
 fftw_plan hilbertPlan;
 fftw_plan dopplerPlan;	
 
+boost::mutex mutex;
+
 int main(int argc, char *argv[])
 {
-	std::cout << "test" << std::endl;
-	
-	int opt;
-	
+	int opt;	
 	while ((opt = getopt(argc, argv, "vt:c:")) != -1 ) 
     {
         switch (opt) 
@@ -85,14 +84,11 @@ int main(int argc, char *argv[])
         }
     }
     
-    allocateMemory();
-	
+    initTerminal();	
+    allocateMemory();	
+    
 	boost::thread_group threadGroup;
-	boost::thread threads[THREADS];		
-	
-	initTerminal();	
-	startTime();	
-
+	boost::thread threads[THREADS];			
 	fftw_init_threads();
 	fftw_plan_with_nthreads(FFTW_THREADS);
 	fftw_make_planner_thread_safe();
@@ -103,18 +99,17 @@ int main(int argc, char *argv[])
 	{
 		initOpenCV();	
 	}
-
-	loadRefData();		
-	normRefData();	
+	
+	loadRefData();	
+	loadRangeData();
+	
+	startTime();
+	
 	fftw_execute(refPlan);	
 	complxConjRef();	
 	
-	loadRangeData();
-	
 	for (int i = 0; i < THREADS; i++)
-	{
 		threadGroup.create_thread(boost::bind(&perThread, i));
-	}
 	
 	threadGroup.join_all();		
 	
@@ -122,8 +117,10 @@ int main(int argc, char *argv[])
 	{
 		plotWaterfall();
 		savePlots();
-	}
+		//saveData();
+	}	
 	
+	endTime();	
 	
 	freeMem();
 	cv::waitKey(0);
@@ -157,27 +154,29 @@ void perThread(int id)
 		fftw_execute(resultPlan);		
 		
 		if (visualiserOn) 
-		{
-			updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);
+		{			
+			updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);			
 			
 			if (i%UPDATELINE == 0)
 			{
+				mutex.lock();
 				plotWaterfall();
-			}
+				mutex.unlock();
+			}				
 		}	
 
 		/*if (doppOn)
 		{
-			hilbertTransform();		//unnecessary cycles			
+			hilbertTransform();					
 			popDopplerData(i); 		
 			processDoppler(i);		
 		}	*/				
 	}	
-	
+		
 	fftw_destroy_plan(rangePlan);
 	fftw_destroy_plan(resultPlan);	
 	
-	std::cout << "(thread "<< id << ") Average Time per Line: "<< std::setprecision (2) << std::fixed << getTime()/RANGELINES * 1000000 << " us" << std::endl;
+	//std::cout << "(thread "<< id << ") Average Time per Line: "<< std::setprecision (2) << std::fixed << getTime()/RANGELINES * 1000000 << " us" << std::endl;
 }
 
 
@@ -200,6 +199,8 @@ void allocateMemory(void)
 	refPlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuffer, FFTW_ESTIMATE);
 	hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, FFTW_MEASURE);
 	dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, dopplerBuffer, dopplerBuffer, FFTW_FORWARD, FFTW_MEASURE);	
+	
+	std::cout << "Allocated Global Memory" << std::endl;
 }
 
 
@@ -275,7 +276,7 @@ void complxConjRef(void)
 {
 	for (int i = 0; i < (PADRANGESIZE/2 + 1); i++)
 		fftRefBuffer[i][1] = -1*fftRefBuffer[i][1];
-	printMsg("Complex Conjugate Reference");
+	//printMsg("Complex Conjugate Reference");
 }
 
 void popRangeBuffer(int rangeLine, double* realRangeBuffer)
@@ -305,7 +306,7 @@ void loadRangeData(void)
 	//close binary files
 	fclose(dataBinFile_p);
 
-	printMsg("Range Data Loaded");
+	std::cout << "Range Data Loaded" << std::endl;
 }
 
 void loadRefData(void)
@@ -337,7 +338,7 @@ void loadRefData(void)
 			realRefBuffer[i] = 0;
 	}
 
-	printMsg("Reference Data Loaded");	
+	std::cout << "Reference Data Loaded" << std::endl;	
 
 }
 
@@ -347,7 +348,6 @@ void normRefData(void)
 	
 	for (int i = 0; i < PADRANGESIZE; i++)
 		realRefBuffer[i] = realRefBuffer[i]/normFactor;
-
 	printMsg("Reference Data Normalized");
 }
 
@@ -379,7 +379,7 @@ void freeMem(void)
 	fftw_destroy_plan(dopplerPlan);
 	fftw_destroy_plan(refPlan);
 
-	printMsg("Memory Free \n");
+	//printMsg("Memory Free \n");
 }
 
 

@@ -9,7 +9,7 @@ cv::Mat resizedDoppImage;
 cv::Size waterSize(500, 500);
 cv::Size doppSize(250, 500);
 
-int waterfallColourMapSlider = 2;
+int waterfallColourMapSlider = 0;
 int dopplerColourMapSlider = 0;
 
 const int dopplerThresholdMax = 255;
@@ -35,7 +35,7 @@ void initOpenCV(void)
 		cv::createTrackbar( "Doppler Colour Map", "Control Window", &dopplerColourMapSlider, colourMapMax);
 	}
 
-	printMsg("Initialized OpenCV");
+	std::cout << "Initialized OpenCV" << std::endl;
 }
 
 void updateWaterfall(int rangeLine, double *imageValues)
@@ -64,8 +64,6 @@ void plotWaterfall(void)
 	cv::imshow("Waterfall Plot", processedImage);
 	
 	cv::waitKey(1);	
-	//processedImage.release();
-	//waterImage.release();
 }
 
 void updateDoppler(uint8_t  *imageValues)
@@ -92,6 +90,21 @@ void savePlots(void)
 {
 	cv::imwrite("../results/waterfall_plot.jpg", processedImage);
 	if (doppOn) cv::imwrite("../results/doppler_plot.jpg", resizedDoppImage);
+}
+
+void saveData(void)
+{
+    std::ofstream fout("../results/waterfall_data.bin", std::ios::out | std::ios::binary);
+
+    for(int i=0; i<waterImage.rows; i++)
+    {
+        for(int j=0; j<waterImage.cols; j++)
+        {
+            fout<<waterImage.at<float>(i,j);
+        }
+    }
+
+    fout.close();
 }
 
 void GNUplot(void)
