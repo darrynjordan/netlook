@@ -39,7 +39,7 @@ void initPlots(void)
 		cv::createTrackbar( "Doppler Colour Map", "Control Window", &dopplerColourMapSlider, colourMapMax);
 	}
 
-	std::cout << "Initialized Plots" << std::endl;
+	//std::cout << "Initialized Plots" << std::endl;
 }
 
 void updateWaterfall(int rangeLine, double *imageValues)
@@ -53,13 +53,13 @@ void updateWaterfall(int rangeLine, double *imageValues)
 
 void plotWaterfall(void)
 {					
-	processPlot();
+	processImage();
 	cv::imshow("Waterfall Plot", processedImage);	
 	cv::waitKey(1);	
 }
 
 
-void processPlot(void)
+void processImage(void)
 {
 	cv::resize(waterImage, resizedWaterImage, waterSize);	
 	cv::log(resizedWaterImage, resizedWaterImage);
@@ -97,7 +97,7 @@ void plotDoppler(void)
 
 void savePlots(void)
 {
-	processPlot();	
+	processImage();	
 	cv::imwrite("../results/waterfall_plot.jpg", processedImage);
 	if (isDoppler) cv::imwrite("../results/doppler_plot.jpg", resizedDoppImage);
 }

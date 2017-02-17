@@ -1,15 +1,11 @@
 #include "general.hpp"
 
-double 	tStart, tEnd;
-
 void initTerminal(void)
 {
 	system("clear\n");
 	printf("NetRAD RTI Processor\n");
-	printf("--------------------\n");
-	printf("\n");		
-
-	if (isDoppler)
+	
+	/*if (isDoppler)
 		printf("Doppler Processing:\t\tON\n");
 	else
 		printf("Doppler Processing:\t\tOFF\n");
@@ -23,43 +19,62 @@ void initTerminal(void)
 	else
 		printf("Zero Padding Size Suggestions:\tOFF\n");
 		
-	printf("\n");
+	printf("\n");*/
 	printf("========================================\n");
+	printf("Dataset ID:\t\t%i\n", DATASETID);
 	printf("Number of Range Lines:\t%i\n", RANGELINES);
 	printf("Samples per Range Line:\t%i\n", RANGESIZE);
 	printf("Zero Padded Size:\t%i\n", PADRANGESIZE);
-	printf("Threads for FFTW:\t%i\n", FFTW_THREADS);
-	printf("Concurrent Threads:\t%i\n", THREADS);
+	printf("FFTW Threads:\t\t%i\n", FFTW_THREADS);
+	printf("Course Threads:\t\t%i\n", THREADS);
 	printf("Range Lines per Thread:\t%i\n", RANGELINESPERTHREAD);
+	printf("Processing Repetitions:\t%i\n", REPETITIONS);
+	
+	switch (PLANNER_FLAG)
+	{
+		case 0:
+			printf("Planner Flag: \t\tFFTW_MEASURE\n");
+			break;
+		case 64:
+			printf("Planner Flag: \t\tFFTW_ESTIMATE\n");
+			break;		
+		default:
+			printf("ERROR: Unknown Planner Flag!\n\n");
+			exit(EXIT_FAILURE);
+	}
+	
+	
 	printf("========================================\n");
 	printf("\n");
 
 }
 
-float getTime(void)
+
+void help(void)
 {
-	struct timeval time;
-    gettimeofday(&time,NULL);
-	tEnd = (double)time.tv_sec + (double)time.tv_usec * .000001;
-	return (float)(tEnd - tStart);
+	system("clear\n");
+	printf("NetRAD RTI Processor: Help\n");
+	printf("========================================\n");
+	printf(" -h: display this help screen\n");
+	printf(" -d: select the dataset id \t(1 - 10)\n");
+	printf(" -l: number of range lines \t(1 - 130000)\n");
+	printf(" -z: bins to zero pad up to \t(2048 - 10280)\n");
+	printf(" -t: number of course threads\n");
+	printf(" -f: number of threads per fft\n");
+	printf(" -p: planner flag for fftw \t(0 or 64)\n");
+	printf(" -r: number of repetitions\n");
+	printf(" -v: turn openCV visualisation on\n");
+	printf(" -c: initial colour map \t(1 - 11)\n");	
+	printf(" -u: number of range lines per update of visualisation\n");
+	printf("========================================\n");
+	printf("\n");
+	exit(EXIT_SUCCESS);	
 }
 
-void startTime(void)
-{
-	std::cout << "Starting Timer...\n" << std::endl;
-	struct timeval time;
-    gettimeofday(&time,NULL);
-	tStart = (double)time.tv_sec + (double)time.tv_usec * .000001;	
-}
-
-void endTime(void)
-{
-	std::cout << "Completed Processing in " << std::setprecision (2) << std::fixed << getTime() << "s\n" << std::endl;	
-}
 
 void printMsg(std::string msg)
 {
-	std::cout << std::setprecision (2) << std::fixed << getTime() << "s:\t" << msg << std::endl;	
+	std::cout << std::setprecision (2) << std::fixed << getTimeElapsed() << "s:\t" << msg << std::endl;	
 }
 
 float getWindowFactor(int sample, int numSamples, int window)
@@ -82,7 +97,7 @@ void  popLookUpTables(void)
 	{
 		doppWindow[i] = getWindowFactor(i, DOPPLERSIZE, HANNING);
 	}
-	std::cout << "Calculated Window Values" << std::endl;
+	//std::cout << "Calculated Window Values" << std::endl;
 }
 
 void primeSolver(void)

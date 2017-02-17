@@ -11,6 +11,8 @@
 #include <cstdio>
 #include <unistd.h>
 #include <boost/thread.hpp>
+#include <time.h>
+#include <sys/time.h>
 
 #include <iostream>
 #include <sstream>
@@ -38,13 +40,17 @@ void popDopplerBuffer(int dopplerLine);
 void complxConjRef(void);
 void getParameters(void);
 void perThread(int id);
-void freeMem(void);
+void freeMemory(void);
+void processingLoop(int repetitions);
 void postProcessMatched(void);
 void postProcessDoppler(void);
 void normRefData(void);
 void processDoppler(int rangeLine);
 float getNormFactor(void);
 uint16_t getRangeOffset(void);
+
+void restartTimer(void);
+double getTimeElapsed(void);
 
 //globals
 extern uint16_t 	*realDataBuffer;
@@ -62,6 +68,7 @@ extern bool isDoppler;
 extern bool isSuggestions;
 extern int dopplerThresholdSlider;
 
+extern int DATASETID;
 extern int REFSIZE;
 extern int PADRANGESIZE;
 extern int RANGELINES;
@@ -71,5 +78,7 @@ extern int UPDATELINE;
 extern int FFTW_THREADS;
 extern int THREADS;
 extern int RANGELINESPERTHREAD;
+extern int REPETITIONS;
+extern int PLANNER_FLAG;
 
 #endif

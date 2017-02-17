@@ -9,9 +9,7 @@
 enum window {HANNING, HAMMING, BLACKMAN};
 
 void  initTerminal(void);
-void  startTime(void);
-void endTime(void);
-float getTime(void);
+void  help(void);
 void  printMsg(std::string msg);
 float getWindowFactor(int sample, int numSamples, int window);
 void  primeSolver(void);

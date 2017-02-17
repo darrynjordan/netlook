@@ -23,8 +23,13 @@ int RANGELINES = 130000;
 int FFTW_THREADS = 1;
 int THREADS = 1;
 int RANGELINESPERTHREAD = RANGELINES/THREADS;
+int REPETITIONS = 1;
+int PLANNER_FLAG = 64;
 
 dataset Dataset;
+
+struct timeval time_struct;
+double start_time, end_time;
 
 //=====================================================================================================
 // Allocate Memory
@@ -58,10 +63,13 @@ boost::mutex mutex;
 int main(int argc, char *argv[])
 {
 	int opt;	
-	while ((opt = getopt(argc, argv, "f:u:l:p:d:vt:c:")) != -1) 
+	while ((opt = getopt(argc, argv, "hp:r:f:u:l:z:d:vt:c:")) != -1) 
     {
         switch (opt) 
         {
+            case 'h':
+				help();						
+				break;
             case 'd':
 				DATASETID = atoi(optarg);				
 				break;
@@ -69,7 +77,13 @@ int main(int argc, char *argv[])
 				FFTW_THREADS = atoi(optarg);
 				break;
 			case 'p':
+				PLANNER_FLAG = atoi(optarg);	
+				break;
+			case 'z':
 				PADRANGESIZE = atoi(optarg);
+				break;
+			case 'r':
+				REPETITIONS = atoi(optarg);
 				break;
 			case 'u':
 				UPDATELINE = atoi(optarg);
@@ -94,48 +108,88 @@ int main(int argc, char *argv[])
 				else
 				fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);				
         }
-    }    
+    }   
     
     Dataset.setID(DATASETID);					
 	REFSIZE = Dataset.getRefSigSize();    
 
-    initTerminal();	
-    allocateMemory();
-    initMat();	
+	initTerminal();	
     
-	boost::thread_group threadGroup;
-	boost::thread threads[THREADS];			
-	fftw_init_threads();
-	fftw_plan_with_nthreads(FFTW_THREADS);
-	fftw_make_planner_thread_safe();
-
-	popLookUpTables();
+	processingLoop(REPETITIONS);	
 	
-	if (isVisualiser) initPlots();	
-	
-	loadRefData();	
-	loadRangeData();
-	
-	startTime();
-	
-	fftw_execute(refPlan);	
-	complxConjRef();	
-	
-	for (int i = 0; i < THREADS; i++)
-		threadGroup.create_thread(boost::bind(&perThread, i));
-	
-	threadGroup.join_all();		
-	
-	if (isVisualiser) plotWaterfall();	
-	
-	endTime();	
-	
-	savePlots();
-	//saveData();
-	freeMem();
 	cv::waitKey(0);
 	
 	return 0;
+}
+
+void processingLoop(int repetitions)
+{
+	boost::thread_group threadGroup;
+	double min_time, max_time, trial_time;
+	double avg_time = 0;
+	
+	for (int j = 0; j < repetitions; j ++)
+	{	
+		allocateMemory();
+		initMat();		
+		
+		boost::thread threads[THREADS];			
+		fftw_init_threads();
+		fftw_plan_with_nthreads(FFTW_THREADS);
+		fftw_make_planner_thread_safe();
+
+		popLookUpTables();
+		
+		if (isVisualiser) initPlots();	
+		
+		loadRefData();	
+		loadRangeData();
+		
+		restartTimer();
+		
+		fftw_execute(refPlan);	
+		complxConjRef();	
+		
+		for (int i = 0; i < THREADS; i++)
+		{
+			threadGroup.create_thread(boost::bind(&perThread, i));
+		}
+		
+		threadGroup.join_all();		
+		
+		trial_time = getTimeElapsed();
+		
+		if (isVisualiser) plotWaterfall();	
+
+		savePlots();
+		//saveData();
+		freeMemory();
+		
+		printf("Trial %i: %.5f s\n", j, trial_time);
+		
+		if (j == 0)
+		{
+			min_time = trial_time;
+			max_time = trial_time;			
+		}
+		else
+		{
+			if (trial_time < min_time)
+				min_time = trial_time;
+			if (trial_time > max_time)
+				max_time = trial_time;
+		}
+		
+		avg_time += trial_time;
+	}
+	
+	avg_time = avg_time/repetitions;
+	
+	std::cout << std::endl;
+	printf("Min: %.5f s\n", min_time);
+	printf("Max: %.5f s\n", max_time);
+	printf("Avg: %.5f s\n", avg_time);
+	std::cout << std::endl;
 }
 
 
@@ -143,12 +197,13 @@ void perThread(int id)
 {
 	int start_index = id*RANGELINESPERTHREAD;
 	
-	fftw_plan rangePlan  = fftw_plan_dft_r2c_1d(PADRANGESIZE, &realRangeBuffer[id*PADRANGESIZE], &fftRangeBuffer[id*(PADRANGESIZE/2 + 1)], FFTW_MEASURE);
-	fftw_plan resultPlan = fftw_plan_dft_c2r_1d(PADRANGESIZE, &hilbertBuffer[id*PADRANGESIZE], &realRangeBuffer[id*PADRANGESIZE], FFTW_MEASURE | FFTW_PRESERVE_INPUT);
+	fftw_plan rangePlan  = fftw_plan_dft_r2c_1d(PADRANGESIZE, &realRangeBuffer[id*PADRANGESIZE], &fftRangeBuffer[id*(PADRANGESIZE/2 + 1)], PLANNER_FLAG);
+	fftw_plan resultPlan = fftw_plan_dft_c2r_1d(PADRANGESIZE, &hilbertBuffer[id*PADRANGESIZE], &realRangeBuffer[id*PADRANGESIZE], PLANNER_FLAG | FFTW_PRESERVE_INPUT);
 	
 	for (int i = start_index; i < start_index + RANGELINESPERTHREAD; i++)
 	{		
-		popRangeBuffer(i, &realRangeBuffer[id*PADRANGESIZE]);		
+		popRangeBuffer(i, &realRangeBuffer[id*PADRANGESIZE]);	
+		
 		fftw_execute(rangePlan);	
 		
 		//complex multiplication
@@ -179,11 +234,9 @@ void perThread(int id)
 			processDoppler(i);		
 		}	*/				
 	}	
-		
+	
 	fftw_destroy_plan(rangePlan);
 	fftw_destroy_plan(resultPlan);	
-	
-	//std::cout << "(thread "<< id << ") Average Time per Line: "<< std::setprecision (2) << std::fixed << getTime()/RANGELINES * 1000000 << " us" << std::endl;
 }
 
 
@@ -203,11 +256,11 @@ void allocateMemory(void)
 	refWindow  = (float*)malloc(REFSIZE*sizeof(float));
 	doppWindow = (float*)malloc(DOPPLERSIZE*sizeof(float));
 	
-	refPlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuffer, FFTW_ESTIMATE);
-	hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, FFTW_MEASURE);
-	dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, dopplerBuffer, dopplerBuffer, FFTW_FORWARD, FFTW_MEASURE);	
+	refPlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuffer, PLANNER_FLAG);
+	hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, PLANNER_FLAG);
+	dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, dopplerBuffer, dopplerBuffer, FFTW_FORWARD, PLANNER_FLAG);	
 	
-	std::cout << "Allocated Global Memory" << std::endl;
+	//std::cout << "Allocated Global Memory" << std::endl;
 }
 
 
@@ -313,7 +366,7 @@ void loadRangeData(void)
 	//close binary files
 	fclose(dataBinFile_p);
 
-	std::cout << "Range Data Loaded" << std::endl;
+	//std::cout << "Range Data Loaded" << std::endl;
 }
 
 void loadRefData(void)
@@ -345,8 +398,7 @@ void loadRefData(void)
 			realRefBuffer[i] = 0;
 	}
 
-	std::cout << "Reference Data Loaded" << std::endl;	
-
+	//std::cout << "Reference Data Loaded" << std::endl;	
 }
 
 void normRefData(void)
@@ -370,7 +422,7 @@ float getNormFactor(void)
 	return refMax;
 }
 
-void freeMem(void)
+void freeMemory(void)
 {
 	fftw_free(fftRefBuffer);
 	fftw_free(hilbertBuffer);
@@ -387,6 +439,19 @@ void freeMem(void)
 	fftw_destroy_plan(refPlan);
 
 	//printMsg("Memory Free \n");
+}
+
+double getTimeElapsed(void)
+{	
+    gettimeofday(&time_struct, NULL);
+	end_time = (double)time_struct.tv_sec + (double)(time_struct.tv_usec*1e-6);
+	return (double)(end_time - start_time);
+}
+
+void restartTimer(void)
+{
+    gettimeofday(&time_struct, NULL);
+	start_time = (double)time_struct.tv_sec + (double)(time_struct.tv_usec*1e-6);	
 }
 
 
