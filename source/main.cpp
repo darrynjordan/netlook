@@ -183,12 +183,16 @@ void processingLoop(int repetitions)
 		avg_time += trial_time;
 	}
 	
-	avg_time = avg_time/repetitions;
+	if (repetitions > 1)
+	{
+		avg_time = avg_time/repetitions;
+		
+		std::cout << std::endl;
+		printf("Min: %.5f s\n", min_time);
+		printf("Max: %.5f s\n", max_time);
+		printf("Avg: %.5f s\n", avg_time);		
+	}
 	
-	std::cout << std::endl;
-	printf("Min: %.5f s\n", min_time);
-	printf("Max: %.5f s\n", max_time);
-	printf("Avg: %.5f s\n", avg_time);
 	std::cout << std::endl;
 }
 

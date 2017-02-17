@@ -56,7 +56,7 @@ void help(void)
 	printf("NetRAD RTI Processor: Help\n");
 	printf("========================================\n");
 	printf(" -h: display this help screen\n");
-	printf(" -d: select the dataset id \t(1 - 10)\n");
+	printf(" -d: select the dataset id \t(0 - 9)\n");
 	printf(" -l: number of range lines \t(1 - 130000)\n");
 	printf(" -z: bins to zero pad up to \t(2048 - 10280)\n");
 	printf(" -t: number of course threads\n");
