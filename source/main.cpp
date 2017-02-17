@@ -58,12 +58,15 @@ boost::mutex mutex;
 int main(int argc, char *argv[])
 {
 	int opt;	
-	while ((opt = getopt(argc, argv, "u:l:p:d:vt:c:")) != -1) 
+	while ((opt = getopt(argc, argv, "f:u:l:p:d:vt:c:")) != -1) 
     {
         switch (opt) 
         {
             case 'd':
 				DATASETID = atoi(optarg);				
+				break;
+			case 'f':
+				FFTW_THREADS = atoi(optarg);
 				break;
 			case 'p':
 				PADRANGESIZE = atoi(optarg);
