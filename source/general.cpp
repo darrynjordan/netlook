@@ -41,8 +41,7 @@ void initTerminal(void)
 		default:
 			printf("ERROR: Unknown Planner Flag!\n\n");
 			exit(EXIT_FAILURE);
-	}
-	
+	}	
 	
 	printf("========================================\n");
 	printf("\n");
@@ -54,7 +53,7 @@ void help(void)
 {
 	system("clear\n");
 	printf("NetRAD RTI Processor: Help\n");
-	printf("=============================================================\n");
+	printf("========================================================\n");
 	printf(" -h: display this help screen\n");
 	printf(" -d: select the dataset id \t(0 - 9)\n");
 	printf(" -l: number of range lines \t(1 - 130000)\n");
@@ -65,9 +64,11 @@ void help(void)
 	printf(" -r: number of repetitions\n");
 	printf(" -v: turn openCV visualisation on\n");
 	printf(" -c: initial colour map \t(1 - 11)\n");	
-	printf(" -u: number of range lines per update of visualisation\n");
-	printf("\nPredicted maximum number of threads for your system: %i\n", boost::thread::hardware_concurrency());
-	printf("=============================================================\n");
+	printf(" -u: range lines per update of visualisation\n");
+	
+	printf("\n");
+	printf("Predicted maximum number of threads for your system: %i\n", boost::thread::hardware_concurrency());
+	printf("========================================================\n");
 	printf("\n");
 	exit(EXIT_SUCCESS);	
 }
