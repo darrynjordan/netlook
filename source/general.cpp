@@ -54,7 +54,7 @@ void help(void)
 {
 	system("clear\n");
 	printf("NetRAD RTI Processor: Help\n");
-	printf("========================================\n");
+	printf("=============================================================\n");
 	printf(" -h: display this help screen\n");
 	printf(" -d: select the dataset id \t(0 - 9)\n");
 	printf(" -l: number of range lines \t(1 - 130000)\n");
@@ -66,7 +66,8 @@ void help(void)
 	printf(" -v: turn openCV visualisation on\n");
 	printf(" -c: initial colour map \t(1 - 11)\n");	
 	printf(" -u: number of range lines per update of visualisation\n");
-	printf("========================================\n");
+	printf("\nPredicted maximum number of threads for your system: %i\n", boost::thread::hardware_concurrency());
+	printf("=============================================================\n");
 	printf("\n");
 	exit(EXIT_SUCCESS);	
 }
