@@ -24,7 +24,7 @@ CTestTestfile.cmake
 *.jpg
 
 ### Geany ###
-netrad-quicklook.geany
+netlook.geany
 
 ### Linux ###
 *~
