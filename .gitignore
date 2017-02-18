@@ -1,7 +1,7 @@
 # Created by https://www.gitignore.io/api/cmake,opencv,linux
 
 ### RDP ###
-quicklook
+netlook
 
 ### CMake ###
 CMakeCache.txt
