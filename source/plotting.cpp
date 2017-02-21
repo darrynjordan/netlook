@@ -94,17 +94,11 @@ void plotDoppler(void)
 
 void saveData(void)
 {
-    std::ofstream fout("../results/waterfall_data.bin");
-
-    for(int i = 0; i < processedImage.rows; i++)
-    {
-        for(int j = 0; j < processedImage.cols; j++)
-        {
-            fout << processedImage.at<uint8_t>(i, j);
-        }
-    }
-
-    fout.close();
+	cv::FileStorage file("../results/waterfall_data.yml", cv::FileStorage::WRITE);
+	
+	file << "Waterfall" << waterImage;
+	
+	file.release();
 }
 
 void GNUplot(void)

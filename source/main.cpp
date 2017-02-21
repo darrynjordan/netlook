@@ -23,7 +23,7 @@ int PADRANGESIZE 	= netrad.getPaddedSize();
 int DOPPLERSIZE 	= 64;
 int UPDATELINE 		= 1000;
 int RANGESIZE 		= 2048;
-int RANGELINES 		= 130000;
+int RANGELINES 		= 5000;
 int FFTW_THREADS	= 1;
 
 
