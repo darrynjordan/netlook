@@ -15,7 +15,7 @@ bool 		suggestOn = false;
 
 std::vector<float> timePlot;
 
-radarData netrad(D5);
+radarData netrad(D2);
 
 int REFSIZE 		= netrad.getRefSigSize();
 int PADRANGESIZE 	= netrad.getPaddedSize();
@@ -23,7 +23,7 @@ int PADRANGESIZE 	= netrad.getPaddedSize();
 int DOPPLERSIZE 	= 64;
 int UPDATELINE 		= 10000;
 int RANGESIZE 		= 2048;
-int RANGELINES 		= 130000;
+int RANGELINES 		= 10000;
 int FFTW_THREADS	= 1;
 
 
@@ -69,7 +69,9 @@ int main(int argc, char *argv[])
 	matchedFilter();
 	//GNUplot();
 	std::cout << "\nAverage Time per Line: "<< std::setprecision (2) << std::fixed << getTime()/RANGELINES * 1000000 << " us\n" << std::endl;
-
+	
+	saveData();
+	
 	freeMem();
 	cv::waitKey(0);
 	return 0;
