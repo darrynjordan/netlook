@@ -104,17 +104,11 @@ void savePlots(void)
 
 void saveData(void)
 {
-    std::ofstream fout("../results/waterfall_data.bin", std::ios::out | std::ios::binary);
-
-    for(int i = 0; i < waterImage.rows; i++)
-    {
-        for(int j = 0; j < waterImage.cols; j++)
-        {
-            fout << waterImage.at<float>(i,j);
-        }
-    }
-
-    fout.close();
+	cv::FileStorage file("../results/waterfall_data.yml", cv::FileStorage::WRITE);
+	
+	file << "Waterfall" << waterImage;
+	
+	file.release();
 }
 
 void GNUplot(void)
