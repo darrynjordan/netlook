@@ -81,4 +81,7 @@ extern int RANGELINESPERTHREAD;
 extern int REPETITIONS;
 extern int PLANNER_FLAG;
 
+extern double min_time, max_time, trial_time;
+extern double avg_time;
+
 #endif

@@ -74,6 +74,24 @@ void help(void)
 }
 
 
+void timingSummary(void)
+{
+	std::ofstream timing_file;
+	timing_file.open("timing.csv", std::ofstream::out | std::ofstream::app);
+	timing_file << DATASETID << ", ";
+	timing_file << RANGELINES << ", ";
+	timing_file << PADRANGESIZE << ", ";
+	timing_file << PLANNER_FLAG << ", ";
+	timing_file << FFTW_THREADS << ", ";
+	timing_file << THREADS << ", ";
+	timing_file << RANGELINESPERTHREAD << ", ";
+	timing_file << min_time << ", ";
+	timing_file << max_time << ", ";
+	timing_file << avg_time << " \n";
+	timing_file.close();
+}
+
+
 void printMsg(std::string msg)
 {
 	std::cout << std::setprecision (2) << std::fixed << getTimeElapsed() << "s:\t" << msg << std::endl;	

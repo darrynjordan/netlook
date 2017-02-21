@@ -3,6 +3,9 @@
 ### RDP ###
 netlook
 
+### timing ###
+timing.csv
+
 ### CMake ###
 CMakeCache.txt
 CMakeFiles

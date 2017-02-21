@@ -30,6 +30,8 @@ dataset Dataset;
 
 struct timeval time_struct;
 double start_time, end_time;
+double min_time, max_time, trial_time;
+double avg_time = 0;
 
 //=====================================================================================================
 // Allocate Memory
@@ -117,6 +119,8 @@ int main(int argc, char *argv[])
     
 	processingLoop(REPETITIONS);	
 	
+	timingSummary();
+	
 	cv::waitKey(0);
 	
 	return 0;
@@ -125,8 +129,6 @@ int main(int argc, char *argv[])
 void processingLoop(int repetitions)
 {
 	boost::thread_group threadGroup;
-	double min_time, max_time, trial_time;
-	double avg_time = 0;
 	
 	for (int j = 0; j < repetitions; j ++)
 	{	

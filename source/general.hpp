@@ -8,11 +8,12 @@
 
 enum window {HANNING, HAMMING, BLACKMAN};
 
-void  initTerminal(void);
-void  help(void);
-void  printMsg(std::string msg);
+void initTerminal(void);
+void help(void);
+void printMsg(std::string msg);
+void primeSolver(void);
+void popLookUpTables(void);
+void timingSummary(void);
 float getWindowFactor(int sample, int numSamples, int window);
-void  primeSolver(void);
-void  popLookUpTables(void);
 
 #endif
