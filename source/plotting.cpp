@@ -104,11 +104,13 @@ void savePlots(void)
 
 void saveData(void)
 {
-	cv::FileStorage file("../results/waterfall_data.yml", cv::FileStorage::WRITE);
-	
-	file << "Waterfall" << waterImage;
-	
-	file.release();
+	/*cv::FileStorage file("../results/waterfall_data.yml", cv::FileStorage::WRITE);	
+	file << "Waterfall" << waterImage;	
+	file.release();*/
+		
+	std::ofstream outputFile("../results/waterfall_data.csv");
+    outputFile << format(waterImage, "CSV") << std::endl;
+    outputFile.close();	
 }
 
 void GNUplot(void)
