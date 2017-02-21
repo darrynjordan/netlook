@@ -2,6 +2,7 @@
 
 //globals
 cv::Mat waterImage, doppImage;
+cv::Mat processedImage;	
 cv::Mat resizedWaterImage, resizedDoppImage;
 cv::Size waterSize(500, 500);
 cv::Size doppSize(250, 500);
@@ -14,6 +15,9 @@ const int colourMapMax = 11;
 
 void initOpenCV(void)
 {	
+	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
+	doppImage = cv::Mat::ones(RANGELINES, DOPPLERSIZE, CV_64F);
+	
 	cv::namedWindow("Control Window", cv::WINDOW_NORMAL);
 	cv::moveWindow("Control Window", 870, 100); 	
 	
@@ -38,7 +42,8 @@ void updateWaterfall(int rangeLine, double *imageValues)
 	
 	cv::abs(matchedRow);	
 
-	waterImage.push_back(matchedRow);
+	//waterImage.push_back(matchedRow);
+	matchedRow.copyTo(waterImage(cv::Rect(0, rangeLine, matchedRow.cols, matchedRow.rows)));
 	
 	if (((rangeLine%(UPDATELINE-1) == 0) || rangeLine == (RANGELINES-1)) && rangeLine != 0)
 	{
@@ -52,7 +57,6 @@ void plotWaterfall(void)
 	cv::log(resizedWaterImage, resizedWaterImage);
 	cv::normalize(resizedWaterImage, resizedWaterImage, 0.0, 1.0, cv::NORM_MINMAX);
 
-	cv::Mat processedImage;	
 	resizedWaterImage.convertTo(processedImage, CV_8U, 255);	
 	
 	cv::equalizeHist(processedImage, processedImage);
@@ -64,14 +68,14 @@ void plotWaterfall(void)
 	cv::imshow("Waterfall Plot", processedImage);
 	//cv::imwrite("waterfall_plot.png", resizedWaterImage);
 	cv::waitKey(1);	
-	processedImage.release();
+	//processedImage.release();
 	//waterImage.release();
 }
 
 void updateDoppler(uint8_t  *imageValues)
 {
-	cv::Mat row = cv::Mat(1, DOPPLERSIZE, CV_8U, imageValues);
-	doppImage.push_back(row);
+	//cv::Mat row = cv::Mat(1, DOPPLERSIZE, CV_8U, imageValues);
+	//doppImage.push_back(row);
 }
 
 void plotDoppler(void)
@@ -90,13 +94,13 @@ void plotDoppler(void)
 
 void saveData(void)
 {
-    std::ofstream fout("../results/waterfall_data.bin", std::ios::out | std::ios::binary);
+    std::ofstream fout("../results/waterfall_data.bin");
 
-    for(int i = 0; i < waterImage.rows; i++)
+    for(int i = 0; i < processedImage.rows; i++)
     {
-        for(int j = 0; j < waterImage.cols; j++)
+        for(int j = 0; j < processedImage.cols; j++)
         {
-            fout << waterImage.at<float>(i,j);
+            fout << processedImage.at<uint8_t>(i, j);
         }
     }
 

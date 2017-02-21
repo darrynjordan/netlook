@@ -10,7 +10,7 @@ double 		tStart, tEnd;
 int			dopplerDataStart = 0; 
 int			dopplerThresholdSlider = 0;
 int 		processingDelay = 0;
-bool 		doppOn = true;
+bool 		doppOn = false;
 bool 		suggestOn = false;
 
 std::vector<float> timePlot;
@@ -21,9 +21,9 @@ int REFSIZE 		= netrad.getRefSigSize();
 int PADRANGESIZE 	= netrad.getPaddedSize();
 
 int DOPPLERSIZE 	= 64;
-int UPDATELINE 		= 10000;
+int UPDATELINE 		= 1000;
 int RANGESIZE 		= 2048;
-int RANGELINES 		= 10000;
+int RANGELINES 		= 130000;
 int FFTW_THREADS	= 1;
 
 
