@@ -162,7 +162,7 @@ void processingLoop(int repetitions)
 		if (isVisualiser) plotWaterfall();	
 
 		savePlots();
-		saveData();
+		//saveData();
 		freeMemory();
 		
 		printf("Trial %i: %.5f s\n", j, trial_time);
