@@ -11,5 +11,5 @@ for dataset in datasets:
 	for size in sizes:					
 		for fftw_thread in fftw_threads:
 			for thread in threads:	
-				subprocess.call(['../build/netlook', '-d ' + dataset, '-t ' + thread, '-l ' + line, '-z ' + zero, '-p ' + fftw_flag, '-f ' + fftw_thread, '-r ' + repetitions]);
+				subprocess.call(['../build/netlook', '-d ' + dataset, '-t ' + thread, '-l ' + size, '-z ' + size, '-p ' + fftw_flag, '-f ' + fftw_thread, '-r ' + repetitions]);
 						
