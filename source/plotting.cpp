@@ -10,7 +10,7 @@ cv::Size waterSize(500, 500);
 cv::Size doppSize(250, 500);
 
 int waterfallColourMapSlider = 0;
-int dopplerColourMapSlider = 0;
+int dopplerColourMapSlider = 1;
 int	dopplerThresholdSlider = 0;
 
 const int dopplerThresholdMax = 255;
@@ -24,6 +24,9 @@ void initMat(void)
 
 void initPlots(void)
 {	
+	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
+	doppImage = cv::Mat::ones(RANGELINES, DOPPLERSIZE, CV_8U);
+	
 	cv::namedWindow("Control Window", cv::WINDOW_NORMAL);
 	cv::moveWindow("Control Window", 870, 100); 	
 	

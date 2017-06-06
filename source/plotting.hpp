@@ -17,6 +17,7 @@ void initMat(void);
 void savePlots(void);
 void saveData(void);
 void GNUplot(void);
+void saveData(void);
 
 extern int waterfallColourMapSlider;
 
