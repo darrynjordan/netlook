@@ -46,6 +46,8 @@ void postProcessMatched(void);
 void postProcessDoppler(void);
 void normRefData(void);
 void processDoppler(int rangeLine);
+void fftDopplerData(void);
+void hilbertTransform(void);
 float getNormFactor(void);
 uint16_t getRangeOffset(void);
 

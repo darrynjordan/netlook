@@ -19,7 +19,7 @@ const int colourMapMax = 11;
 void initMat(void)
 {
 	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
-	doppImage = cv::Mat::ones(RANGELINES, DOPPLERSIZE, CV_64F);
+	doppImage = cv::Mat::ones(RANGELINES, DOPPLERSIZE, CV_8U);
 }
 
 void initPlots(void)
