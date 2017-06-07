@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <boost/thread.hpp>
+#include <fftw3.h>
 #include <time.h>
 #include <sys/time.h>
 
@@ -19,7 +20,6 @@
 #include <fstream>
 
 #include "plotting.hpp"
-#include "fft.hpp"
 #include "general.hpp"
 #include "data.hpp"
 
@@ -65,6 +65,7 @@ extern fftw_complex *dopplerBuffer;
 extern fftw_complex *dopplerData;
 extern float		*refWindow;
 extern float		*doppWindow;
+extern float		*rangeWindow;
 
 extern bool isDoppler;
 extern bool isSuggestions;

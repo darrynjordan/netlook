@@ -49,6 +49,7 @@ fftw_complex *dopplerBuffer;
 fftw_complex *dopplerData;
 
 float *refWindow;
+float *rangeWindow;
 float *doppWindow;
 
 //=====================================================================================================
@@ -138,8 +139,8 @@ void processingLoop(int repetitions)
 		fftw_init_threads();
 		fftw_plan_with_nthreads(FFTW_THREADS);
 		fftw_make_planner_thread_safe();
-
-		popLookUpTables();
+		
+		popLookUpTables();		
 		
 		if (isVisualiser) initPlots();	
 		
@@ -260,6 +261,7 @@ void allocateMemory(void)
 
 	refWindow  = (float*)malloc(REFSIZE*sizeof(float));
 	doppWindow = (float*)malloc(DOPPLERSIZE*sizeof(float));
+	rangeWindow = (float*)malloc(RANGESIZE*sizeof(float));
 	
 	refPlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuffer, PLANNER_FLAG);
 	hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, PLANNER_FLAG);
@@ -352,7 +354,7 @@ void popRangeBuffer(int rangeLine, double* realRangeBuffer)
 	for (int i = 0; i < PADRANGESIZE; i++)
 	{
 		if (i < RANGESIZE)
-			realRangeBuffer[i] = (double)(realDataBuffer[i + start] - ADCOFFSET);
+			realRangeBuffer[i] = (double)(realDataBuffer[i + start] - ADCOFFSET)*rangeWindow[i];
 		else
 			realRangeBuffer[i] = 0; 
 	}

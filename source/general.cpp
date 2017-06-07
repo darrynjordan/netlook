@@ -112,6 +112,11 @@ void  popLookUpTables(void)
 	{
 		refWindow[i] = getWindowFactor(i, REFSIZE, HANNING);
 	}
+	
+	for (int i = 0; i < RANGESIZE; i++)
+	{
+		rangeWindow[i] = getWindowFactor(i, RANGESIZE, HANNING);
+	}
 
 	for (int i = 0; i < DOPPLERSIZE; i++)
 	{
