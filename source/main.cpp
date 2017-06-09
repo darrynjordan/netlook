@@ -65,7 +65,7 @@ boost::mutex mutex;
 int main(int argc, char *argv[])
 {
 	int opt;	
-	while ((opt = getopt(argc, argv, "hp:r:f:u:l:z:d:vt:c:")) != -1) 
+	while ((opt = getopt(argc, argv, "hp:r:f:u:l:z:d:vt:c:D:")) != -1) 
     {
         switch (opt) 
         {
@@ -86,6 +86,9 @@ int main(int argc, char *argv[])
 				break;
 			case 'r':
 				REPETITIONS = atoi(optarg);
+				break;
+			case 'D':
+				DOPPLERSIZE = atoi(optarg);
 				break;
 			case 'u':
 				UPDATELINE = atoi(optarg);
