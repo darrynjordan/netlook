@@ -9,7 +9,7 @@
 //=====================================================================================================
 int	dopplerDataStart = 0; 
 
-bool isDoppler = true;
+bool isDoppler = false;
 bool isSuggestions = false;
 bool isVisualiser = false;
 
@@ -17,7 +17,7 @@ int DATASETID = 0;
 int REFSIZE = 100;
 int PADRANGESIZE = 2048;
 int DOPPLERSIZE = 128;
-int UPDATELINE = 512;
+int UPDATELINE = 1000;
 int RANGESIZE = 2048;
 int RANGELINES = 130000;
 int FFTW_THREADS = 1;
@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
 	
 	timingSummary();
 	
-	cv::waitKey(0);
+	//cv::waitKey(0);
 	
 	return 0;
 }
