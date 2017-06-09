@@ -235,7 +235,6 @@ void perThread(int id)
 
 		if (isVisualiser && isDoppler && (THREADS == 1))
 		{
-			hilbertTransform();					
 			popDopplerData(i); 		
 			processDoppler(i);		
 		}					
@@ -273,7 +272,7 @@ void allocateMemory(void)
 
 void processDoppler(int rangeLine)
 {
-	if ((rangeLine + 1 - dopplerDataStart) == DOPPLERSIZE)  //check that dopplerData is full
+	if ((rangeLine - dopplerDataStart + 1) == DOPPLERSIZE)  //check that dopplerData is full
 	{
 		for (int i = 0; i < PADRANGESIZE; i++)		
 		{
@@ -291,8 +290,10 @@ void popDopplerData(int rangeLine)
 	if (rangeLine%UPDATELINE == 0)
 		dopplerDataStart = rangeLine;
 
-	if ((rangeLine + 1 - dopplerDataStart) <= DOPPLERSIZE)
+	if ((rangeLine - dopplerDataStart + 1) <= DOPPLERSIZE)
 	{
+		hilbertTransform();	
+		
 		for (int j = 0; j < PADRANGESIZE; j++)
 		{
 			dopplerData[j*DOPPLERSIZE + (rangeLine - dopplerDataStart)][0] = hilbertBuffer[j][0];
