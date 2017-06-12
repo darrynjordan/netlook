@@ -9,7 +9,7 @@ cv::Mat resizedDoppImage;
 cv::Size waterSize(500, 500);
 cv::Size doppSize(250, 500);
 
-int waterfallColourMapSlider = 0;
+int waterfallColourMapSlider = 2;
 int dopplerColourMapSlider = 1;
 int	dopplerThresholdSlider = 0;
 
@@ -78,7 +78,7 @@ void processImage(void)
 }
 
 
-void updateDoppler(uint8_t  *imageValues)
+void updateDoppler(uint8_t *imageValues)
 {
 	cv::Mat row = cv::Mat(1, DOPPLERSIZE, CV_8U, imageValues);
 	doppImage.push_back(row);

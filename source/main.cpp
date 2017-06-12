@@ -124,7 +124,9 @@ int main(int argc, char *argv[])
 	
 	timingSummary();
 	
-	//cv::waitKey(0);
+	savePlots();
+	
+	cv::waitKey(0);
 	
 	return 0;
 }
