@@ -2,7 +2,15 @@
 
 //globals
 cv::Mat waterImage;
-cv::Mat doppImage;
+
+//final averaged doppler image
+cv::Mat avgDoppImage;
+
+//vector to hold each threads current image
+std::vector<cv::Mat> dopplerMatrix;
+std::vector<cv::Mat> resizedDopplerMatrix;
+std::vector<cv::Mat> processedDopplerMatrix;
+		
 cv::Mat processedImage;	
 cv::Mat resizedWaterImage;
 cv::Mat resizedDoppImage;
@@ -12,52 +20,49 @@ cv::Size doppSize(250, 500);
 int waterfallColourMapSlider = 2;
 int dopplerColourMapSlider = 1;
 int	dopplerThresholdSlider = 0;
+int n_plot_updates = 0;
 
 const int dopplerThresholdMax = 255;
 const int colourMapMax = 11;
 
-void initMat(void)
-{
-	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
-	doppImage = cv::Mat::ones(RANGELINES, DOPPLERSIZE, CV_8U);
-}
-
 void initPlots(void)
 {	
 	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
-	doppImage = cv::Mat::ones(RANGELINES, DOPPLERSIZE, CV_8U);
+	avgDoppImage = cv::Mat(500, 250, CV_64F, cv::Scalar::all(0));
+	
+	dopplerMatrix.resize(THREADS);
+	resizedDopplerMatrix.resize(THREADS);
+	processedDopplerMatrix.resize(THREADS);
 	
 	cv::namedWindow("Control Window", cv::WINDOW_NORMAL);
 	cv::moveWindow("Control Window", 870, 100); 	
 	
-	cv::namedWindow("Waterfall Plot");
-	cv::moveWindow("Waterfall Plot", 100, 100);					//trackbar is 54 units in height
-	cv::createTrackbar( "Waterfall Colour Map", "Control Window", &waterfallColourMapSlider, colourMapMax);
+	cv::namedWindow("Range-Time-Intensity Plot");
+	cv::moveWindow("Range-Time-Intensity Plot", 100, 100);					//trackbar is 54 units in height
+	cv::createTrackbar( "RTI Colour Map", "Control Window", &waterfallColourMapSlider, colourMapMax);
 
 	if (isDoppler == true)
 	{
-		cv::namedWindow("Doppler Plot");
-		cv::moveWindow("Doppler Plot", 600, 100); 
-		cv::createTrackbar( "Threshold Value", "Control Window", &dopplerThresholdSlider, dopplerThresholdMax);
-		cv::createTrackbar( "Doppler Colour Map", "Control Window", &dopplerColourMapSlider, colourMapMax);
-	}
-
+		cv::namedWindow("Range-Doppler Plot");
+		cv::moveWindow("Range-Doppler Plot", 600, 100); 
+		cv::createTrackbar("Threshold Value", "Control Window", &dopplerThresholdSlider, dopplerThresholdMax);
+		cv::createTrackbar("Doppler Colour Map", "Control Window", &dopplerColourMapSlider, colourMapMax);
+	}	
+	
 	//std::cout << "Initialized Plots" << std::endl;
 }
 
 void updateWaterfall(int rangeLine, double *imageValues)
 {
-	cv::Mat matchedRow = cv::Mat(1, PADRANGESIZE, CV_64F, imageValues);
-	
-	cv::abs(matchedRow);	
-	
+	cv::Mat matchedRow = cv::Mat(1, PADRANGESIZE, CV_64F, imageValues);	
+	cv::abs(matchedRow);		
 	matchedRow.copyTo(waterImage(cv::Rect(0, rangeLine, matchedRow.cols, matchedRow.rows)));
 }
 
 void plotWaterfall(void)
 {					
 	processImage();
-	cv::imshow("Waterfall Plot", processedImage);	
+	cv::imshow("Range-Time-Intensity Plot", processedImage);	
 	cv::waitKey(1);	
 }
 
@@ -78,24 +83,33 @@ void processImage(void)
 }
 
 
-void updateDoppler(uint8_t *imageValues)
+void updateDoppler(int thread_id, double *imageValues)
 {
-	cv::Mat row = cv::Mat(1, DOPPLERSIZE, CV_8U, imageValues);
-	doppImage.push_back(row);
+	cv::Mat dopplerRow = cv::Mat(1, DOPPLERSIZE, CV_64F, imageValues);
+	dopplerMatrix[thread_id].push_back(dopplerRow);
 }
 
-void plotDoppler(void)
+void plotDoppler(int thread_id)
 {
-	cv::resize(doppImage, resizedDoppImage, doppSize);	
-	doppImage.release();
-	cv::applyColorMap(resizedDoppImage, resizedDoppImage, dopplerColourMapSlider);
-	cv::flip(resizedDoppImage, resizedDoppImage, 0);
+	n_plot_updates++;
+	cv::resize(dopplerMatrix[thread_id], resizedDopplerMatrix[thread_id], doppSize);	
+	dopplerMatrix[thread_id].release();
+	
+	//cv::log(averagedDopplerImage, scaledDopplerImage);
+	cv::normalize(resizedDopplerMatrix[thread_id], resizedDopplerMatrix[thread_id], 0.0, 1.0, cv::NORM_MINMAX);
+	
+	resizedDopplerMatrix[thread_id].convertTo(processedDopplerMatrix[thread_id], CV_8U, 255);
+	
+	cv::threshold(processedDopplerMatrix[thread_id], processedDopplerMatrix[thread_id], dopplerThresholdSlider, dopplerThresholdMax, 3);	
+		
+	cv::applyColorMap(processedDopplerMatrix[thread_id], processedDopplerMatrix[thread_id], dopplerColourMapSlider);
+	cv::flip(processedDopplerMatrix[thread_id], processedDopplerMatrix[thread_id], 0);
 
-	cv::imshow("Doppler Plot", resizedDoppImage);
+	cv::imshow("Range-Doppler Plot", processedDopplerMatrix[thread_id]);
 	
 	cv::waitKey(1);
-	resizedDoppImage.release();	
-	doppImage.release();
+	resizedDopplerMatrix[thread_id].release();	
+	processedDopplerMatrix[thread_id].release();
 }
 
 void savePlots(void)

@@ -7,8 +7,6 @@
 //=====================================================================================================
 // Global Variables
 //=====================================================================================================
-int	dopplerDataStart = 0; 
-
 bool isDoppler = true;
 bool isSuggestions = false;
 bool isVisualiser = false;
@@ -40,7 +38,7 @@ double avg_time = 0;
 uint16_t *realDataBuffer;
 double   *realRangeBuffer;
 double   *realRefBuffer;
-uint8_t  *dopplerImageBuffer;
+double   *dopplerImageBuffer;
 
 fftw_complex *fftRangeBuffer;
 fftw_complex *fftRefBuffer; 
@@ -57,8 +55,6 @@ float *doppWindow;
 //=====================================================================================================
 
 fftw_plan refPlan;
-fftw_plan hilbertPlan;
-fftw_plan dopplerPlan;	
 
 boost::mutex mutex;
 
@@ -138,7 +134,6 @@ void processingLoop(int repetitions)
 	for (int j = 0; j < repetitions; j ++)
 	{	
 		allocateMemory();
-		initMat();		
 		
 		boost::thread threads[THREADS];			
 		fftw_init_threads();
@@ -206,14 +201,17 @@ void processingLoop(int repetitions)
 
 void perThread(int id)
 {
-	int start_index = id*RANGELINESPERTHREAD;
+	int range_start_index = id*RANGELINESPERTHREAD;
+	int	doppler_start_index = id*RANGELINESPERTHREAD; 
 	
 	fftw_plan rangePlan  = fftw_plan_dft_r2c_1d(PADRANGESIZE, &realRangeBuffer[id*PADRANGESIZE], &fftRangeBuffer[id*(PADRANGESIZE/2 + 1)], PLANNER_FLAG);
 	fftw_plan resultPlan = fftw_plan_dft_c2r_1d(PADRANGESIZE, &hilbertBuffer[id*PADRANGESIZE], &realRangeBuffer[id*PADRANGESIZE], PLANNER_FLAG | FFTW_PRESERVE_INPUT);
+	fftw_plan hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, &hilbertBuffer[id*PADRANGESIZE], &hilbertBuffer[id*PADRANGESIZE], FFTW_BACKWARD, PLANNER_FLAG);
+	fftw_plan dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, &dopplerBuffer[id*DOPPLERSIZE], &dopplerBuffer[id*DOPPLERSIZE], FFTW_FORWARD, PLANNER_FLAG);	
 	
-	for (int i = start_index; i < start_index + RANGELINESPERTHREAD; i++)
-	{		
-		popRangeBuffer(i, &realRangeBuffer[id*PADRANGESIZE]);	
+	for (int rangeLine = range_start_index; rangeLine < range_start_index + RANGELINESPERTHREAD; rangeLine++)
+	{
+		popRangeBuffer(rangeLine, &realRangeBuffer[id*PADRANGESIZE]);	
 		
 		fftw_execute(rangePlan);	
 		
@@ -221,7 +219,7 @@ void perThread(int id)
 		for (int j = 0; j < (PADRANGESIZE/2 + 1); j++)
 		{			
 			int k = j + id*(PADRANGESIZE);
-			int l = j + id*(PADRANGESIZE/2 +1);
+			int l = j + id*(PADRANGESIZE/2 + 1);
 			
 			hilbertBuffer[k][0] = fftRangeBuffer[l][0]*fftRefBuffer[j][0] - fftRangeBuffer[l][1]*fftRefBuffer[j][1];
 			hilbertBuffer[k][1] = fftRangeBuffer[l][0]*fftRefBuffer[j][1] + fftRangeBuffer[l][1]*fftRefBuffer[j][0];
@@ -229,24 +227,69 @@ void perThread(int id)
 		
 		fftw_execute(resultPlan);	
 		
-		updateWaterfall(i, &realRangeBuffer[id*PADRANGESIZE]);	
+		updateWaterfall(rangeLine, &realRangeBuffer[id*PADRANGESIZE]);	
 		
-		if (isVisualiser && (i%UPDATELINE == 0))
+		if (isVisualiser && (rangeLine%UPDATELINE == 0))
 		{
 			mutex.lock();
 			plotWaterfall();
 			mutex.unlock();		
 		}	
 
-		if (isVisualiser && isDoppler && (THREADS == 1))
+		if (isVisualiser && isDoppler)
 		{
-			popDopplerData(i); 		
-			processDoppler(i);		
+			//reached a multiple of UPDATELINE, new start point for collecting Doppler data
+			if (rangeLine%UPDATELINE == 0)
+			{
+				doppler_start_index = rangeLine;
+			}
+
+			//is the current rangeLine within DOPPLERSIZE from doppler_start_index
+			if ((rangeLine - doppler_start_index + 1) <= DOPPLERSIZE)
+			{
+				//zero the positive half of the pulse compressed spectrum
+				memset(&hilbertBuffer[(id*PADRANGESIZE) + (PADRANGESIZE/2 + 1)], 0,  sizeof(fftw_complex)*(PADRANGESIZE/2 - 1));	
+				fftw_execute(hilbertPlan);
+				
+				for (int j = 0; j < PADRANGESIZE; j++)
+				{
+					dopplerData[id*PADRANGESIZE*DOPPLERSIZE + j*DOPPLERSIZE + (rangeLine - doppler_start_index)][0] = hilbertBuffer[id*PADRANGESIZE + j][0];
+					dopplerData[id*PADRANGESIZE*DOPPLERSIZE + j*DOPPLERSIZE + (rangeLine - doppler_start_index)][1] = hilbertBuffer[id*PADRANGESIZE + j][1];
+				}
+			}			
+				
+			//check if dopplerData is full		
+			if ((rangeLine - doppler_start_index + 1) == DOPPLERSIZE)  
+			{
+				//begin Doppler processing
+				for (int dopplerLine = 0; dopplerLine < PADRANGESIZE; dopplerLine++)		
+				{
+					//isolate a Doppler line
+					for (int j = 0; j < DOPPLERSIZE; j++)
+					{	
+						dopplerBuffer[id*DOPPLERSIZE + j][0] = dopplerData[id*PADRANGESIZE*DOPPLERSIZE + dopplerLine*DOPPLERSIZE + j][0]*doppWindow[j]; 
+						dopplerBuffer[id*DOPPLERSIZE + j][1] = dopplerData[id*PADRANGESIZE*DOPPLERSIZE + dopplerLine*DOPPLERSIZE + j][1]*doppWindow[j];
+					}
+					
+					//FFT Doppler line
+					fftw_execute(dopplerPlan);
+					
+					postProcessDoppler(id);
+					
+					updateDoppler(id, &dopplerImageBuffer[id*DOPPLERSIZE]);	
+				}
+				
+				mutex.lock();
+				plotDoppler(id);
+				mutex.unlock();				
+			}	
 		}					
 	}	
 	
 	fftw_destroy_plan(rangePlan);
 	fftw_destroy_plan(resultPlan);	
+	fftw_destroy_plan(hilbertPlan);	
+	fftw_destroy_plan(dopplerPlan);
 }
 
 
@@ -255,77 +298,35 @@ void allocateMemory(void)
 	realDataBuffer = (uint16_t*)malloc(RANGELINES*RANGESIZE*sizeof(uint16_t));
 	realRangeBuffer 	= (double*)malloc(THREADS*PADRANGESIZE*sizeof(double));
 	realRefBuffer       = (double*)malloc(THREADS*PADRANGESIZE*sizeof(double));
-	dopplerImageBuffer  = (uint8_t*)malloc(THREADS*DOPPLERSIZE*sizeof(uint8_t));
+	dopplerImageBuffer  = (double*)malloc(THREADS*DOPPLERSIZE*sizeof(double));
 
 	fftRangeBuffer  = (fftw_complex*)malloc(THREADS*(PADRANGESIZE/2 + 1)*sizeof(fftw_complex));
 	fftRefBuffer    = (fftw_complex*)malloc(THREADS*(PADRANGESIZE/2 + 1)*sizeof(fftw_complex)); 
 	hilbertBuffer   = (fftw_complex*)malloc(THREADS*PADRANGESIZE*sizeof(fftw_complex));
 	dopplerBuffer   = (fftw_complex*)malloc(THREADS*DOPPLERSIZE*sizeof(fftw_complex));
-	dopplerData     = (fftw_complex*)malloc((PADRANGESIZE*DOPPLERSIZE)*sizeof(fftw_complex));
+	dopplerData     = (fftw_complex*)malloc((THREADS*PADRANGESIZE*DOPPLERSIZE)*sizeof(fftw_complex));
 
 	refWindow  = (float*)malloc(REFSIZE*sizeof(float));
 	doppWindow = (float*)malloc(DOPPLERSIZE*sizeof(float));
 	rangeWindow = (float*)malloc(RANGESIZE*sizeof(float));
 	
 	refPlan = fftw_plan_dft_r2c_1d(PADRANGESIZE, realRefBuffer, fftRefBuffer, PLANNER_FLAG);
-	hilbertPlan = fftw_plan_dft_1d(PADRANGESIZE, hilbertBuffer, hilbertBuffer, FFTW_BACKWARD, PLANNER_FLAG);
-	dopplerPlan = fftw_plan_dft_1d(DOPPLERSIZE, dopplerBuffer, dopplerBuffer, FFTW_FORWARD, PLANNER_FLAG);	
 	
 	//std::cout << "Allocated Global Memory" << std::endl;
 }
 
 
-void processDoppler(int rangeLine)
-{
-	if ((rangeLine - dopplerDataStart + 1) == DOPPLERSIZE)  //check that dopplerData is full
-	{
-		for (int i = 0; i < PADRANGESIZE; i++)		
-		{
-			popDopplerBuffer(i);	
-			fftDopplerData();
-			postProcessDoppler();
-			updateDoppler(dopplerImageBuffer);	
-		}
-		plotDoppler();
-	}
-}
-
-void popDopplerData(int rangeLine)
-{
-	if (rangeLine%UPDATELINE == 0)
-		dopplerDataStart = rangeLine;
-
-	if ((rangeLine - dopplerDataStart + 1) <= DOPPLERSIZE)
-	{
-		hilbertTransform();	
-		
-		for (int j = 0; j < PADRANGESIZE; j++)
-		{
-			dopplerData[j*DOPPLERSIZE + (rangeLine - dopplerDataStart)][0] = hilbertBuffer[j][0];
-			dopplerData[j*DOPPLERSIZE + (rangeLine - dopplerDataStart)][1] = hilbertBuffer[j][1];
-		}
-	}
-}
-
-void popDopplerBuffer(int dopplerLine)
-{
-	for (int j = 0; j < DOPPLERSIZE; j++)
-	{	
-		dopplerBuffer[j][0] = dopplerData[dopplerLine*DOPPLERSIZE + j][0]*doppWindow[j]; 
-		dopplerBuffer[j][1] = dopplerData[dopplerLine*DOPPLERSIZE + j][1]*doppWindow[j];
-	}
-}
-
-
-void postProcessDoppler(void)
+void postProcessDoppler(int thread_id)
 {
 	float maxResult = 0.0f;	
 	float result = 0.0f;
 	int processed = 0;
+	int index = 0;
 
 	for (int i = 0; i < DOPPLERSIZE; i++)
 	{
-		result = (sqrt(dopplerBuffer[i][0]*dopplerBuffer[i][0] + dopplerBuffer[i][1]*dopplerBuffer[i][1]));
+		index = thread_id*DOPPLERSIZE + i;
+		result = sqrt(dopplerBuffer[index][0]*dopplerBuffer[index][0] + dopplerBuffer[index][1]*dopplerBuffer[index][1]);
 
 		if (result > maxResult)
 			maxResult = result;
@@ -333,15 +334,13 @@ void postProcessDoppler(void)
 
 	for (int i = 0; i < DOPPLERSIZE; i++)
 	{
-		processed = (uint8_t)(((sqrt(dopplerBuffer[i][0]*dopplerBuffer[i][0] + dopplerBuffer[i][1]*dopplerBuffer[i][1]))/maxResult)*255);
-
-		if (processed < dopplerThresholdSlider) //set threshold
-			processed = 0;
+		index = thread_id*DOPPLERSIZE + i;
+		processed = ((sqrt(dopplerBuffer[index][0]*dopplerBuffer[index][0] + dopplerBuffer[index][1]*dopplerBuffer[index][1]))/maxResult)*255;
 		
 		if (i < (DOPPLERSIZE/2 + 1))		
-			dopplerImageBuffer[i + (DOPPLERSIZE/2 - 1)] = processed;
+			dopplerImageBuffer[index + (DOPPLERSIZE/2 - 1)] = processed;
 		else
-			dopplerImageBuffer[i - (DOPPLERSIZE/2 + 1)] = processed;
+			dopplerImageBuffer[index - (DOPPLERSIZE/2 + 1)] = processed;
 	}
 }
 
@@ -447,8 +446,6 @@ void freeMemory(void)
 	free(realRefBuffer);
 	free(realRangeBuffer);		
 	
-	fftw_destroy_plan(hilbertPlan);	
-	fftw_destroy_plan(dopplerPlan);
 	fftw_destroy_plan(refPlan);
 
 	//printMsg("Memory Free \n");
@@ -466,17 +463,5 @@ void restartTimer(void)
     gettimeofday(&time_struct, NULL);
 	start_time = (double)time_struct.tv_sec + (double)(time_struct.tv_usec*1e-6);	
 }
-
-void fftDopplerData(void)
-{
-	fftw_execute(dopplerPlan);
-}
-
-void hilbertTransform(void)
-{
-	memset(&hilbertBuffer[PADRANGESIZE/2 + 1], 0,  sizeof(fftw_complex)*(PADRANGESIZE/2 - 1));	
-	fftw_execute(hilbertPlan);
-}
-
 
 

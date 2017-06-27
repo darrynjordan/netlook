@@ -8,12 +8,11 @@
 
 //Functions
 void plotWaterfall(void);
-void plotDoppler(void);
+void plotDoppler(int thread_id);
 void updateWaterfall(int rangeLine, double *imageValues);
-void updateDoppler(uint8_t  *imageValues);
+void updateDoppler(int thread_id, double *imageValues);
 void initPlots(void);
 void processImage(void);
-void initMat(void);
 void savePlots(void);
 void saveData(void);
 void GNUplot(void);
