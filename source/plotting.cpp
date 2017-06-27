@@ -19,7 +19,7 @@ cv::Size waterSize(500, 500);
 cv::Size doppSize(250, 500);
 
 int waterfallColourMapSlider = 2;
-int dopplerColourMapSlider = 1;
+int dopplerColourMapSlider = 2;
 int	dopplerThresholdSlider = 0;
 int n_plot_updates = 0;
 
@@ -102,7 +102,9 @@ void plotDoppler(int thread_id)
 	
 	normDopplerImage.convertTo(processedDopplerImage, CV_8U, 255);
 	
-	cv::threshold(processedDopplerImage, processedDopplerImage, dopplerThresholdSlider, dopplerThresholdMax, 3);	
+	cv::threshold(processedDopplerImage, processedDopplerImage, dopplerThresholdSlider, dopplerThresholdMax, 3);
+	
+	//cv::equalizeHist(processedDopplerImage, processedDopplerImage);	
 		
 	cv::applyColorMap(processedDopplerImage, processedDopplerImage, dopplerColourMapSlider);
 	cv::flip(processedDopplerImage, processedDopplerImage, 0);
