@@ -4,12 +4,13 @@
 cv::Mat waterImage;
 
 //final averaged doppler image
-cv::Mat avgDoppImage;
+cv::Mat averageDopplerImage;
+cv::Mat processedDopplerImage;
+cv::Mat normDopplerImage;
 
 //vector to hold each threads current image
 std::vector<cv::Mat> dopplerMatrix;
 std::vector<cv::Mat> resizedDopplerMatrix;
-std::vector<cv::Mat> processedDopplerMatrix;
 		
 cv::Mat processedImage;	
 cv::Mat resizedWaterImage;
@@ -28,11 +29,10 @@ const int colourMapMax = 11;
 void initPlots(void)
 {	
 	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
-	avgDoppImage = cv::Mat(500, 250, CV_64F, cv::Scalar::all(0));
+	averageDopplerImage = cv::Mat(500, 250, CV_64F, cv::Scalar::all(0));
 	
 	dopplerMatrix.resize(THREADS);
 	resizedDopplerMatrix.resize(THREADS);
-	processedDopplerMatrix.resize(THREADS);
 	
 	cv::namedWindow("Control Window", cv::WINDOW_NORMAL);
 	cv::moveWindow("Control Window", 870, 100); 	
@@ -95,21 +95,23 @@ void plotDoppler(int thread_id)
 	cv::resize(dopplerMatrix[thread_id], resizedDopplerMatrix[thread_id], doppSize);	
 	dopplerMatrix[thread_id].release();
 	
-	//cv::log(averagedDopplerImage, scaledDopplerImage);
-	cv::normalize(resizedDopplerMatrix[thread_id], resizedDopplerMatrix[thread_id], 0.0, 1.0, cv::NORM_MINMAX);
+	averageDopplerImage = averageDopplerImage + resizedDopplerMatrix[thread_id];		
+			
+	//cv::log(averageDopplerImage, normDopplerImage);
+	cv::normalize(averageDopplerImage, normDopplerImage, 0.0, 1.0, cv::NORM_MINMAX);
 	
-	resizedDopplerMatrix[thread_id].convertTo(processedDopplerMatrix[thread_id], CV_8U, 255);
+	normDopplerImage.convertTo(processedDopplerImage, CV_8U, 255);
 	
-	cv::threshold(processedDopplerMatrix[thread_id], processedDopplerMatrix[thread_id], dopplerThresholdSlider, dopplerThresholdMax, 3);	
+	cv::threshold(processedDopplerImage, processedDopplerImage, dopplerThresholdSlider, dopplerThresholdMax, 3);	
 		
-	cv::applyColorMap(processedDopplerMatrix[thread_id], processedDopplerMatrix[thread_id], dopplerColourMapSlider);
-	cv::flip(processedDopplerMatrix[thread_id], processedDopplerMatrix[thread_id], 0);
+	cv::applyColorMap(processedDopplerImage, processedDopplerImage, dopplerColourMapSlider);
+	cv::flip(processedDopplerImage, processedDopplerImage, 0);
 
-	cv::imshow("Range-Doppler Plot", processedDopplerMatrix[thread_id]);
+	cv::imshow("Range-Doppler Plot", processedDopplerImage);
 	
 	cv::waitKey(1);
 	resizedDopplerMatrix[thread_id].release();	
-	processedDopplerMatrix[thread_id].release();
+	processedDopplerImage.release();
 }
 
 void savePlots(void)
