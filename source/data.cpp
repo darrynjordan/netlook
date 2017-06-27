@@ -55,7 +55,7 @@ void dataset::setID(int id)
 		}
 		case 5: 
 		{
-			dataSetName = "/home/darryn/Documents/Netrad/e11_04_27_1311_19_P1_1_130000_S0_1_2047_node3.bin";
+			dataSetName = "/home/darryn/Documents/NetRad/e11_04_27_1311_19_P1_1_130000_S0_1_2047_node3.bin";
 			refSigName  = "../reference_signals/refSigN3N3Pl10000.txt";
 			refSigSize  = 1000;
 			//paddedSize  = 3072; 
