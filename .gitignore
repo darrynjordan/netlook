@@ -25,6 +25,7 @@ CTestTestfile.cmake
 */cmake_install.cmake
 .DS_Store
 *.jpg
+*.png
 
 ### Geany ###
 netlook.geany

@@ -5,6 +5,7 @@ cv::Mat waterImage;
 
 //final averaged doppler image
 cv::Mat averageDopplerImage;
+cv::Mat logDopplerImage;
 cv::Mat processedDopplerImage;
 cv::Mat normDopplerImage;
 
@@ -97,10 +98,10 @@ void plotDoppler(int thread_id)
 	
 	averageDopplerImage = averageDopplerImage + resizedDopplerMatrix[thread_id];		
 			
-	//cv::log(averageDopplerImage, normDopplerImage);
-	cv::normalize(averageDopplerImage, normDopplerImage, 0.0, 1.0, cv::NORM_MINMAX);
+	//cv::log(averageDopplerImage/n_plot_updates, logDopplerImage);
+	cv::normalize(averageDopplerImage, normDopplerImage, 0.0, 1.0, cv::NORM_MINMAX);	
 	
-	normDopplerImage.convertTo(processedDopplerImage, CV_8U, 255);
+	normDopplerImage.convertTo(processedDopplerImage, CV_8U, 255);	
 	
 	cv::threshold(processedDopplerImage, processedDopplerImage, dopplerThresholdSlider, dopplerThresholdMax, 3);
 	
@@ -113,14 +114,14 @@ void plotDoppler(int thread_id)
 	
 	cv::waitKey(1);
 	resizedDopplerMatrix[thread_id].release();	
-	processedDopplerImage.release();
+	//processedDopplerImage.release();
 }
 
 void savePlots(void)
 {
 	processImage();	
-	cv::imwrite("../results/waterfall_plot.jpg", processedImage);
-	if (isDoppler) cv::imwrite("../results/doppler_plot.jpg", resizedDoppImage);
+	cv::imwrite("../results/rti.png", processedImage);
+	if (isDoppler) cv::imwrite("../results/ard.png", processedDopplerImage);
 }
 
 void saveData(void)
