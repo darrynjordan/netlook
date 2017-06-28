@@ -12,7 +12,7 @@ cv::Mat normDopplerImage;
 //vector to hold each threads current image
 std::vector<cv::Mat> dopplerMatrix;
 std::vector<cv::Mat> resizedDopplerMatrix;
-		
+
 cv::Mat processedImage;	
 cv::Mat resizedWaterImage;
 cv::Mat resizedDoppImage;
@@ -27,9 +27,13 @@ int n_plot_updates = 0;
 const int dopplerThresholdMax = 255;
 const int colourMapMax = 11;
 
+void initMats(void)
+{
+	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
+}
+
 void initPlots(void)
 {	
-	waterImage = cv::Mat::ones(RANGELINES, PADRANGESIZE, CV_64F);
 	averageDopplerImage = cv::Mat(500, 250, CV_64F, cv::Scalar::all(0));
 	
 	dopplerMatrix.resize(THREADS);
@@ -97,7 +101,7 @@ void plotDoppler(int thread_id)
 	dopplerMatrix[thread_id].release();
 	
 	averageDopplerImage = averageDopplerImage + resizedDopplerMatrix[thread_id];		
-			
+	
 	//cv::log(averageDopplerImage/n_plot_updates, logDopplerImage);
 	cv::normalize(averageDopplerImage, normDopplerImage, 0.0, 1.0, cv::NORM_MINMAX);	
 	
@@ -106,7 +110,7 @@ void plotDoppler(int thread_id)
 	cv::threshold(processedDopplerImage, processedDopplerImage, dopplerThresholdSlider, dopplerThresholdMax, 3);
 	
 	//cv::equalizeHist(processedDopplerImage, processedDopplerImage);	
-		
+	
 	cv::applyColorMap(processedDopplerImage, processedDopplerImage, dopplerColourMapSlider);
 	cv::flip(processedDopplerImage, processedDopplerImage, 0);
 

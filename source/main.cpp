@@ -120,9 +120,11 @@ int main(int argc, char *argv[])
 	
 	timingSummary();
 	
-	savePlots();
-	
-	cv::waitKey(0);
+	if (isVisualiser)
+	{
+		savePlots();
+		cv::waitKey(0);
+	}
 	
 	return 0;
 }
@@ -142,7 +144,12 @@ void processingLoop(int repetitions)
 		
 		popLookUpTables();		
 		
-		if (isVisualiser) initPlots();	
+		initMats();
+		
+		if (isVisualiser) 
+		{
+			initPlots();	
+		}
 		
 		loadRefData();	
 		loadRangeData();
@@ -161,9 +168,11 @@ void processingLoop(int repetitions)
 		
 		trial_time = getTimeElapsed();
 		
-		if (isVisualiser) plotWaterfall();	
-
-		savePlots();
+		if (isVisualiser) 
+		{
+			plotWaterfall();	
+		}
+	
 		//saveData();
 		freeMemory();
 		
@@ -236,7 +245,7 @@ void perThread(int id)
 			mutex.unlock();		
 		}	
 
-		if (isVisualiser && isDoppler)
+		if (isDoppler)
 		{
 			//reached a multiple of UPDATELINE, new start point for collecting Doppler data
 			if (rangeLine%UPDATELINE == 0)
@@ -274,14 +283,19 @@ void perThread(int id)
 					//FFT Doppler line
 					fftw_execute(dopplerPlan);
 					
-					postProcessDoppler(id);
-					
-					updateDoppler(id, &dopplerImageBuffer[id*DOPPLERSIZE]);	
+					if (isVisualiser)
+					{
+						postProcessDoppler(id);					
+						updateDoppler(id, &dopplerImageBuffer[id*DOPPLERSIZE]);	
+					}
 				}
 				
-				mutex.lock();
-				plotDoppler(id);
-				mutex.unlock();				
+				if (isVisualiser)
+				{
+					mutex.lock();
+					plotDoppler(id);
+					mutex.unlock();	
+				}			
 			}	
 		}					
 	}	
