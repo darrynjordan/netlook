@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 		cv::waitKey(0);
 	}
 	
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 void processingLoop(int repetitions)

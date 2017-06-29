@@ -12,4 +12,4 @@ find_package(Boost COMPONENTS thread date_time program_options filesystem system
 file(GLOB CPPFILES "source/*.cpp" "source/*.h")
 add_executable(netlook ${CPPFILES})
 
-target_link_libraries(netlook ${OpenCV_LIBS} ${FFTW_LIBRARY} ${Boost_LIBRARIES} -lfftw3_threads -pg)
+target_link_libraries(netlook ${OpenCV_LIBS} ${FFTW_LIBRARY} ${Boost_LIBRARIES} -lfftw3_threads)
