@@ -2,7 +2,7 @@ import subprocess
 
 repetitions = '10';
 datasets = ['0', '1', '2', '3', '4'];
-lines =  ['4096', '16384', '32768', '65536'];
+lines =  ['8192', '32768', '65536'];
 zeros = ['2048'];
 fftw_flags = ['64'];
 fftw_threads = ['1'];

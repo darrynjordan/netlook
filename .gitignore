@@ -4,7 +4,7 @@
 netlook
 
 ### timing ###
-timing.csv
+*.csv
 
 ### CMake ###
 CMakeCache.txt

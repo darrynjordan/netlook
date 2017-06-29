@@ -3,7 +3,7 @@
 void initTerminal(void)
 {
 	system("clear\n");
-	printf("NetRAD RTI Processor\n");
+	printf("NetLook Processor\n");
 	
 	/*if (isDoppler)
 		printf("Doppler Processing:\t\tON\n");
@@ -26,7 +26,7 @@ void initTerminal(void)
 	printf("Samples per Range Line:\t%i\n", RANGESIZE);
 	printf("Zero Padded Size:\t%i\n", PADRANGESIZE);
 	printf("FFTW Threads:\t\t%i\n", FFTW_THREADS);
-	printf("Course Threads:\t\t%i\n", THREADS);
+	printf("Threads:\t\t%i\n", THREADS);
 	printf("Range Lines per Thread:\t%i\n", RANGELINESPERTHREAD);
 	printf("Processing Repetitions:\t%i\n", REPETITIONS);
 	
@@ -58,7 +58,7 @@ void help(void)
 	printf(" -d: select the dataset id \t(0 - 9)\n");
 	printf(" -l: number of range lines \t(1 - 130000)\n");
 	printf(" -z: bins to zero pad up to \t(2048 - 10280)\n");
-	printf(" -t: number of course threads\n");
+	printf(" -t: number of threads\n");
 	printf(" -f: number of threads per fft\n");
 	printf(" -p: planner flag for fftw \t(0 or 64)\n");
 	printf(" -r: number of repetitions\n");
